@@ -1,0 +1,99 @@
+{
+  "~~ MAIN ~~": null,
+  "manifest_version": 2,
+  "name": "__MSG_extName__",
+  "version": "0.2.9",
+  "~~ INFO ~~": null,
+  "default_locale": "en",
+  "description": "__MSG_extDescription__",
+  "icons": {
+    "16": "icons/16.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "author": "shestakovsemen@gmail.com",
+  "~~ ACTIONS ~~": null,
+  "chrome_url_overrides": {
+    "bookmarks": "bookmarks.html"
+  },
+  "browser_action": {
+    "default_icon": {
+      "16": "icons/16.png",
+      "48": "icons/48.png",
+      "128": "icons/128.png"
+    },
+    "default_title": "__MSG_extBtnTitle__",
+    "default_popup": "popup.html"
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://unpkg.com; object-src 'self'",
+  "~~ ENTRY POINTS ~~": null,
+  "background": {
+    "scripts": [
+      "eventPage.js"
+    ],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content_script.js"
+      ]
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "alarms",
+    "background",
+    "bookmarks",
+    "browsingData",
+    "contentSettings",
+    "contextMenus",
+    "cookies",
+    "fileBrowserHandler",
+    "fileSystemProvider",
+    "history",
+    "nativeMessaging",
+    "notifications",
+    "platformKeys",
+    "storage",
+    "tabs",
+    "unlimitedStorage"
+  ],
+  "web_accessible_resources": [
+    "content_script.js.map"
+  ],
+  "~~ COMMANDS ~~": null,
+  "chrome_ui_overrides": {
+    "bookmarks_ui": {
+      "remove_button": "true",
+      "remove_bookmark_shortcut": "true"
+    }
+  },
+  "commands": {
+    "toggle-feature-foo": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y"
+      },
+      "description": "Toggle feature foo"
+    },
+    "_execute_browser_action": {
+      "suggested_key": {
+        "windows": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y",
+        "chromeos": "Ctrl+Shift+U",
+        "linux": "Ctrl+Shift+J"
+      }
+    },
+    "_execute_page_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+E",
+        "windows": "Alt+Shift+P",
+        "mac": "Alt+Shift+P"
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "extName": {
+    "message": "The Marks",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Octocat meets whistlepig",
+    "description": "Extension name"
+  },
+  "extBtnTitle": {
+    "message": "Hello",
+    "description": "Extension name"
+  },
+  "hello": {
+    "message": "Hello, $name$!",
+    "description": "Placeholder enabled message example",
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "World"
+      }
+    }
+  }
+}
