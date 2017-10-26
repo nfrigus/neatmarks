@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "build": "gulp",
-    "pack": "npm run build && crx pack -o dist/dist.crx dist",
+    "pack": "crx pack -o dist/dist.crx dist",
     "start": "npm run assets && webpack --watch --config webpack.config.js"
   },
   "keywords": [],
@@ -28,6 +28,7 @@
     "eslint-plugin-react": "^6.9.0",
     "file-loader": "^0.10.0",
     "gulp": "^3.9.1",
-    "gulp-copy": "^1.0.1"
+    "gulp-copy": "^1.0.1",
+    "svg2png": "^4.1.1"
   }
 }
