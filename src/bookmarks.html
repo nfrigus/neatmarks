@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html>
 <head>
   <meta charset="utf-8">
 
-  <title>Bookmarks</title>
+  <title>Neatmarks</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" href="icons/icon.svg">
 
   <link href="https://unpkg.com/bootstrap@4.0.0-beta.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="bookmarks.css" rel="stylesheet">
+  <link href="css/bookmarks.css" rel="stylesheet">
 
   <script src="https://unpkg.com/vue@2.5.2/dist/vue.min.js"></script>
   <script src="https://unpkg.com/jquery@3.2.1/dist/jquery.min.js"></script>
   <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.min.js"></script>
   <script src="https://unpkg.com/bootstrap@4.0.0-beta.2/dist/js/bootstrap.min.js"></script>
-  <script src="bookmarks.js"></script>
+  <script src="js/bookmarks.js"></script>
 </head>
 
 <body>
 <div>
   <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <a class="navbar-brand" href="#">Dashboard</a>
+      <a class="navbar-brand" href="/bookmarks.html">Neatmarks</a>
       <button
         class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
         aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,16 +32,10 @@
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="/bookmarks.html">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Settings</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Profile</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Help</a>
+            <a class="nav-link" href="/options.html">Settings</a>
           </li>
         </ul>
         <form class="form-inline mt-2 mt-md-0">
@@ -97,7 +91,7 @@
       </nav>
 
       <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
-        <h1>Dashboard</h1>
+        <h1>Neatmarks</h1>
 
         <div id="app">
           <bm-tree v-bind:nodes="bookmarks"></bm-tree>
