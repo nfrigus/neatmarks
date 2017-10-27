@@ -29,6 +29,7 @@
   "~~ ENTRY POINTS ~~": null,
   "background": {
     "scripts": [
+      "js/vendors.js",
       "js/background.js"
     ],
     "persistent": false
