@@ -1,15 +1,18 @@
-'use strict'
-
 const s = {
-  "action": {}, // will hold various action oriented functions
-  "option": {}  // will be retrieved from the background.js page
+  action: {
+    init,
+    option_display_update,
+    restore_options,
+    save_options,
+  },
+  option: {},
 }
 
-s.action.init = function () {
-  var request = {'request': 'options'}
+function init() {
+  let request = {'request': 'options'}
 
-  var init_resume = function (response) {
-    var items, i
+  let init_resume = function (response) {
+    let items, i
 
     s.option = response // all our options are based on background.js which should be considered authoritative
 
@@ -41,8 +44,7 @@ s.action.init = function () {
 
   chrome.extension.sendMessage(request, init_resume)
 }
-
-s.action.option_display_update = function (t, animate) {
+function option_display_update(t, animate) {
   if (animate !== false) {
     animate = true
   }
@@ -64,8 +66,7 @@ s.action.option_display_update = function (t, animate) {
     }
   }
 }
-
-s.action.restore_options = function () {
+function restore_options() {
   var element, i
   for (i in s.option) {
     element = document.getElementById(i)
@@ -77,36 +78,31 @@ s.action.restore_options = function () {
     }
   }
 }
-
-s.action.save_options = function () {
-  var element, round_number
-
-  for (var i in s.option) {
-    element = document.getElementById(i)
-    if (element.type === 'checkbox') {
-      s.option[i] = element.checked // returns true or false
-    } else if (element.type === 'number') {
-      round_number = Math.abs(Math.round(element.value))
-      s.option[i] = (isNaN(round_number)) ? '0' : round_number.toString()
-    } else {
-      s.option[i] = element.value
-    }
+function save_options() {
+  const inputParsers = {
+    checkbox: node => node.checked,
+    number: node => (Math.abs(Math.round(element.value)) || 0).toString(),
+    default: node => node.value,
   }
 
-  var request = {
-    'request': 'options_set',
-    'option': s.option,
+  for (const i in s.option) {
+    const input = document.getElementById(i)
+    const accessor = inputParsers[input.type] || inputParsers.default
+    s.option[i] = accessor(input)
   }
 
-  var animate = function () {
-    document.getElementById('options-saved').classList.add('saved-animation')
-    setTimeout(function () {
-      document.getElementById('options-saved').classList.remove('saved-animation')
-    }, 5250) // 250 ms more than the CSS animation
+  const request = {
+    request: 'options_set',
+    option: s.option,
   }
 
   chrome.extension.sendMessage(request, animate)
 }
-
+function animate() {
+  document.getElementById('options-saved').classList.add('saved-animation')
+  setTimeout(function () {
+    document.getElementById('options-saved').classList.remove('saved-animation')
+  }, 5250) // 250 ms more than the CSS animation
+}
 
 s.action.init()

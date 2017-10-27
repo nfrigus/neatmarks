@@ -2,7 +2,7 @@
   "~~ MAIN ~~": null,
   "manifest_version": 2,
   "name": "__MSG_extName__",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "~~ INFO ~~": null,
   "default_locale": "en",
   "description": "__MSG_extDescription__",

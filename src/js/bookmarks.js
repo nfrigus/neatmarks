@@ -1,3 +1,6 @@
+import 'bootstrap'
+
+
 $(() => {
   Vue.component('bm-tree', {
     props: ['nodes'],
