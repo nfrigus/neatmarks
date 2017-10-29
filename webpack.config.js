@@ -1,9 +1,70 @@
 const webpack = require('webpack')
+const ExtractTextPlugin = require("extract-text-webpack-plugin")
+
+const debug = process.env.NODE_ENV !== 'production'
+const sourceMap = debug
 
 
-module.exports = {
-  devtool: 'source-map',
+const plugins_js = [
+  new webpack.ProvidePlugin({
+    $: 'jquery',
+    'window.jQuery': 'jquery',
+    jQuery: 'jquery',
+    Popper: ['popper.js', 'default'],
+    Vue: ['vue/dist/vue.esm.js', 'default'],
+  }),
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'vendors',
+    minChunks: isVendorModule,
+  }),
+  new webpack.optimize.UglifyJsPlugin({
+    cache: true,
+    parallel: true,
+    sourceMap,
+    test: /\.js$/,
+  }),
+]
+const plugins = [
+  new ExtractTextPlugin("[name].css"),
+  new webpack.EnvironmentPlugin({
+    NODE_ENV: 'development',
+    DEBUG: false,
+  }),
+]
 
+const scss_loader = ExtractTextPlugin.extract({
+  use: [{
+    loader: 'css-loader',
+    options: {sourceMap},
+  }, {
+    loader: 'postcss-loader',
+    options: {
+      sourceMap,
+      ident: 'postcss',
+      plugins: () => [
+        require('precss'),
+        require('autoprefixer'),
+      ],
+    },
+  }, {
+    loader: 'sass-loader',
+    options: {sourceMap},
+  }],
+})
+const rules = [
+  {
+    test: /\.js$/,
+    use: ['babel-loader'],
+    exclude: /node_modules/,
+  },
+  {
+    test: /\.scss$/,
+    use: scss_loader,
+  },
+]
+
+
+module.exports = [{
   entry: {
     background: './src/js/background.js',
     bookmarks: './src/js/bookmarks.js',
@@ -11,41 +72,41 @@ module.exports = {
     options: './src/js/options.js',
     popup: './src/js/popup.js',
   },
-
   output: {
-    path: __dirname + '/dist/js',
     filename: '[name].js',
+    path: __dirname + '/dist/js',
     sourceMapFilename: '[name].js.map',
   },
-
-  plugins: [
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      'window.jQuery': 'jquery',
-      jQuery: 'jquery',
-      Popper: ['popper.js', 'default'],
-      Vue: ['vue/dist/vue.esm.js', 'default'],
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendors',
-      minChunks: isVendorModule,
-    }),
-  ],
-
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        use: ['babel-loader'],
-        exclude: /node_modules/,
-      },
-    ],
+  plugins: plugins_js,
+}, {
+  entry: {
+    main: './src/css/main.scss',
   },
-}
+  output: {
+    filename: '[name].css',
+    path: __dirname + '/dist/css',
+    sourceMapFilename: '[name].css.map',
+  },
+}].map(makeConfig)
 
 
 function isVendorModule({context}) {
   return typeof context === 'string'
-    ? context.indexOf('node_modules') !== -1
+    ? /\/node_modules\/.*\.js$/.test(context)
     : false
+}
+function makeConfig(extend) {
+  const config = {
+    devtool: 'source-map',
+    plugins,
+    module: {rules},
+  }
+  Object.keys(extend).forEach(key => {
+    if (Array.isArray(config[key])) {
+      config[key] = config[key].concat(extend[key])
+    } else {
+      config[key] = extend[key]
+    }
+  })
+  return config
 }

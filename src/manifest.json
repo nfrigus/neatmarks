@@ -2,13 +2,15 @@
   "~~ MAIN ~~": null,
   "manifest_version": 2,
   "name": "__MSG_extName__",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "~~ INFO ~~": null,
   "default_locale": "en",
   "description": "__MSG_extDescription__",
   "icons": {
     "16": "icons/16.png",
+    "32": "icons/32.png",
     "48": "icons/48.png",
+    "64": "icons/64.png",
     "128": "icons/128.png"
   },
   "author": "shestakovsemen@gmail.com",
@@ -19,13 +21,15 @@
   "browser_action": {
     "default_icon": {
       "16": "icons/16.png",
+      "32": "icons/32.png",
       "48": "icons/48.png",
+      "64": "icons/64.png",
       "128": "icons/128.png"
     },
     "default_title": "__MSG_extBtnTitle__",
     "default_popup": "popup.html"
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval' https://unpkg.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' object-src 'self'",
   "~~ ENTRY POINTS ~~": null,
   "background": {
     "scripts": [

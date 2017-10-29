@@ -1,7 +1,6 @@
 const del = require('del')
 const gulp = require('gulp')
 const svg2png = require('svg2png')
-const webpack = require('webpack-stream')(require('./webpack.config'))
 const {exec} = require('child_process')
 const {promisify} = require('util')
 const {readFileSync, writeFile} = require('fs')
@@ -11,36 +10,27 @@ gulp.task('clean', () => del([
   'dist/**/*',
   '!dist/key.pem',
 ]))
-gulp.task('assets', ['clean'], () => gulp.src([
-    'src/**/*',
-    '!src/js/**/*',
+gulp.task('assets', () => gulp.src([
+    'src/*.html',
+    'src/manifest.json',
+    'src/{_locales,icons}/**/*',
   ], {base: 'src'})
   .pipe(gulp.dest('dist')))
-gulp.task('icon', ['clean'], () => convertSvg2Pngs({
+gulp.task('icon', ['assets'], () => convertSvg2Pngs({
   dest: 'dist/icons/{size}.png',
-  sizes: [16, 48, 128],
+  sizes: [16, 32, 48, 64, 128],
   src: 'src/icons/icon.svg',
 }))
-gulp.task('js', ['clean'], () => gulp.src('src')
-  .pipe(webpack)
-  .pipe(gulp.dest('dist/js/')))
+gulp.task('webpack', run('npm run build:webpack'))
 gulp.task('crx', [
   'assets',
   'icon',
-  'js',
-], cb => exec('npm run pack', (err, stdout, stderr) => {
-  console.log(stdout)
-  console.error(stderr)
-  cb(err)
-}))
+  'webpack',
+], run('npm run build:crx'))
+gulp.task('build', ['crx'])
+gulp.task('build:clean', ['clean'], () => gulp.start('build'))
 
-gulp.task('default', [
-  'assets',
-  'clean',
-  'crx',
-  'icon',
-  'js',
-])
+gulp.task('default', ['build:clean'])
 
 async function convertSvg2Pngs({
   src,
@@ -53,4 +43,12 @@ async function convertSvg2Pngs({
   return Promise.all(sizes.map(size =>
     svg2png(src, {width: size, height: size})
       .then(buffer => write(dest.replace('{size}', size), buffer))))
+}
+
+function run(command) {
+  return cb => exec(command, (err, stdout, stderr) => {
+    console.log(stdout)
+    console.error(stderr)
+    cb(err)
+  })
 }
