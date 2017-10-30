@@ -2,7 +2,9 @@ chrome.commands.onCommand.addListener(function (command) {
   console.log('Command:', command)
 })
 
-
+// todo: Enable config sync across devices with `chrome.storage.sync`-api
+// https://developer.chrome.com/extensions/storage#property-sync
+// todo: Simplify bookmarks ordering configs
 const s = {
   a: { // arrays
     delay_queue: [],   // if option "create_delay" is true then keep track of which ids and folders will be sorted once option "create_delay_detail" seconds have passed
