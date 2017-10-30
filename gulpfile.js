@@ -1,5 +1,6 @@
 const del = require('del')
 const gulp = require('gulp')
+const manifest = require('./src/manifest')
 const svg2png = require('svg2png')
 const {exec} = require('child_process')
 const {promisify} = require('util')
@@ -12,7 +13,6 @@ gulp.task('clean', () => del([
 ]))
 gulp.task('assets', () => gulp.src([
     'src/*.html',
-    'src/manifest.json',
     'src/{_locales,icons}/**/*',
   ], {base: 'src'})
   .pipe(gulp.dest('dist')))
@@ -21,10 +21,12 @@ gulp.task('icon', ['assets'], () => convertSvg2Pngs({
   sizes: [16, 32, 48, 64, 128],
   src: 'src/icons/icon.svg',
 }))
+gulp.task('manifest', ['assets'], () => manifest.write('dist'))
 gulp.task('webpack', run('npm run build:webpack'))
 gulp.task('crx', [
   'assets',
   'icon',
+  'manifest',
   'webpack',
 ], run('npm run build:crx'))
 gulp.task('build', ['crx'])
