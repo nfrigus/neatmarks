@@ -31,7 +31,7 @@ module.exports = {
   browser_action: {
     default_icon: icons,
     default_title: "__MSG_extBtnTitle__",
-    default_popup: "popup.html",
+    // default_popup: "popup.html",
   },
   options_page: "options.html",
   background: {

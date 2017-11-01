@@ -2,39 +2,41 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <title>Neatmarks</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" href="icons/icon.svg">
-
   <link rel="stylesheet" href="css/main.css">
 
   <script src="js/vendors.js"></script>
   <script src="js/options.js"></script>
 </head>
-<body class="sprucemarks-legacy">
+<body>
 <div>
   <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
       <a class="navbar-brand" href="/bookmarks.html">Neatmarks</a>
       <button
-        class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
-        aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        class="navbar-toggler d-lg-none"
+        data-target="#header-navbar"
+        data-toggle="collapse"
+        type="button"
+      >
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <div class="collapse navbar-collapse" id="header-navbar">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
             <a class="nav-link" href="/bookmarks.html">Home</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="/options.html">Settings <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="/options.html">Settings</a>
           </li>
         </ul>
-        <form class="form-inline mt-2 mt-md-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+        <form class="form-inline mt-2 mt-md-0" style="display: none">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
       </div>
@@ -43,252 +45,52 @@
 
   <div class="container-fluid">
     <div class="row">
-      <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+      <main role="main" class="col-sm-9 ml-sm-auto mr-sm-auto col-md-10 pt-3 pb-3">
         <h1>Neatmarks</h1>
 
         <div class="wrapper">
           <h2>Autosorting</h2>
 
-          <hr>
-
-          <div class="option">
-            <div class="option-choice">
-              <input type="checkbox" id="bookmarks_bar">
+          <form id="options-form">
+            <div class="form-check">
+              <label class="form-check-label">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  data-option="enabled">
+                enable bookmarks autosorting
+              </label>
             </div>
-            <div class="option-title">
-              <label for="bookmarks_bar">Sort Bookmarks Bar</label>
-              <div class="option-sort">
-                <select id="bookmarks_bar_sort">
-                  <option value="">...</option>
-                  <optgroup label="Alpha">
-                    <option value="alpha">A-Z</option>
-                    <option value="alphaReverse">Z-A</option>
-                  </optgroup>
-                  <optgroup label="Date Added">
-                    <option value="date">Newer - Older</option>
-                    <option value="dateReverse">Older - Newer</option>
-                  </optgroup>
-                  <optgroup label="URL">
-                    <option value="url">A-Z</option>
-                    <option value="urlReverse">Z-A</option>
-                  </optgroup>
-                </select>
-              </div>
+            <div class="form-group">
+              <label for="option-autosorting-order">Sorting order</label>
+              <select data-option="order_by" class="form-control" id="option-autosorting-order">
+                <option value="">...</option>
+                <optgroup label="Alpha">
+                  <option value="alpha">A-Z</option>
+                  <option value="alphaReverse">Z-A</option>
+                </optgroup>
+                <optgroup label="Date Added">
+                  <option value="date">Newer - Older</option>
+                  <option value="dateReverse">Older - Newer</option>
+                </optgroup>
+                <optgroup label="URL">
+                  <option value="url">A-Z</option>
+                  <option value="urlReverse">Z-A</option>
+                </optgroup>
+              </select>
             </div>
-            <div class="option-example">
-              <p>
-                <img class="true" src="images/bookmarks-bar-true.png" width="238" height="59" alt="">
-                <img class="false" src="images/bookmarks-bar-false.png" width="238" height="59" alt="">
-              </p>
+            <div class="form-check">
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" data-option="create_delay">
+                enable sorting delay
+              </label>
             </div>
-          </div>
-
-          <div class="option">
-            <div class="option-choice">
-              <input type="checkbox" id="bookmarks_bar_sub">
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Sorting delay interval</label>
+              <input type="number" class="form-control" id="exampleFormControlInput1" data-option="create_delay_detail">
             </div>
-            <div class="option-title">
-              <label for="bookmarks_bar_sub">Sort Bookmarks Bar<br>Sub Folders</label>
-              <div class="option-sort">
-                <select id="bookmarks_bar_sub_sort">
-                  <option value="">...</option>
-                  <optgroup label="Alpha">
-                    <option value="alpha">A-Z</option>
-                    <option value="alphaReverse">Z-A</option>
-                  </optgroup>
-                  <optgroup label="Date Added">
-                    <option value="date">Newer - Older</option>
-                    <option value="dateReverse">Older - Newer</option>
-                  </optgroup>
-                  <optgroup label="URL">
-                    <option value="url">A-Z</option>
-                    <option value="urlReverse">Z-A</option>
-                  </optgroup>
-                </select>
-              </div>
-            </div>
-            <div class="option-example">
-              <p>
-                <img class="true" src="images/bookmarks-bar-sub-true.png" width="118" height="103" alt="">
-                <img class="false" src="images/bookmarks-bar-sub-false.png" width="118" height="103" alt="">
-              </p>
-            </div>
-          </div>
-
-          <hr>
-
-          <div class="option">
-            <div class="option-choice">
-              <input type="checkbox" id="other_bookmarks">
-            </div>
-            <div class="option-title">
-              <label for="other_bookmarks">Sort Other Bookmarks</label>
-              <div class="option-sort">
-                <select id="other_bookmarks_sort">
-                  <option value="">...</option>
-                  <optgroup label="Alpha">
-                    <option value="alpha">A-Z</option>
-                    <option value="alphaReverse">Z-A</option>
-                  </optgroup>
-                  <optgroup label="Date Added">
-                    <option value="date">Newer - Older</option>
-                    <option value="dateReverse">Older - Newer</option>
-                  </optgroup>
-                  <optgroup label="URL">
-                    <option value="url">A-Z</option>
-                    <option value="urlReverse">Z-A</option>
-                  </optgroup>
-                </select>
-              </div>
-            </div>
-            <div class="option-example">
-              <p>
-                <img class="true" src="images/other-bookmarks-true.png" width="146" height="135" alt="">
-                <img class="false" src="images/other-bookmarks-false.png" width="146" height="135" alt="">
-              </p>
-            </div>
-          </div>
-
-          <div class="option">
-            <div class="option-choice">
-              <input type="checkbox" id="other_bookmarks_sub">
-            </div>
-            <div class="option-title">
-              <label for="other_bookmarks_sub">Sort Other Bookmarks<br>Sub Folders</label>
-              <div class="option-sort">
-                <select id="other_bookmarks_sub_sort">
-                  <option value="">...</option>
-                  <optgroup label="Alpha">
-                    <option value="alpha">A-Z</option>
-                    <option value="alphaReverse">Z-A</option>
-                  </optgroup>
-                  <optgroup label="Date Added">
-                    <option value="date">Newer - Older</option>
-                    <option value="dateReverse">Older - Newer</option>
-                  </optgroup>
-                  <optgroup label="URL">
-                    <option value="url">A-Z</option>
-                    <option value="urlReverse">Z-A</option>
-                  </optgroup>
-                </select>
-              </div>
-            </div>
-            <div class="option-example">
-              <p>
-                <img class="true" src="images/other-bookmarks-sub-true.png" width="203" height="103" alt="">
-                <img class="false" src="images/other-bookmarks-sub-false.png" width="203" height="103" alt="">
-              </p>
-            </div>
-          </div>
-
-          <hr>
-
-          <div class="option">
-            <div class="option-choice">
-              <input type="checkbox" id="mobile_bookmarks">
-            </div>
-            <div class="option-title">
-              <label for="mobile_bookmarks">Sort Mobile Bookmarks</label>
-              <div class="option-sort">
-                <select id="mobile_bookmarks_sort">
-                  <option value="">...</option>
-                  <optgroup label="Alpha">
-                    <option value="alpha">A-Z</option>
-                    <option value="alphaReverse">Z-A</option>
-                  </optgroup>
-                  <optgroup label="Date Added">
-                    <option value="date">Newer - Older</option>
-                    <option value="dateReverse">Older - Newer</option>
-                  </optgroup>
-                  <optgroup label="URL">
-                    <option value="url">A-Z</option>
-                    <option value="urlReverse">Z-A</option>
-                  </optgroup>
-                </select>
-              </div>
-            </div>
-            <div class="option-example">
-              <p>
-                <img class="true" src="images/mobile-bookmarks-true.png" width="303" height="104" alt="">
-                <img class="false" src="images/mobile-bookmarks-false.png" width="303" height="104" alt="">
-              </p>
-            </div>
-          </div>
-
-          <div class="option">
-            <div class="option-choice">
-              <input type="checkbox" id="mobile_bookmarks_sub">
-            </div>
-            <div class="option-title">
-              <label for="mobile_bookmarks_sub">Sort Mobile Bookmarks<br>Sub Folders</label>
-              <div class="option-sort">
-                <select id="mobile_bookmarks_sub_sort">
-                  <option value="">...</option>
-                  <optgroup label="Alpha">
-                    <option value="alpha">A-Z</option>
-                    <option value="alphaReverse">Z-A</option>
-                  </optgroup>
-                  <optgroup label="Date Added">
-                    <option value="date">Newer - Older</option>
-                    <option value="dateReverse">Older - Newer</option>
-                  </optgroup>
-                  <optgroup label="URL">
-                    <option value="url">A-Z</option>
-                    <option value="urlReverse">Z-A</option>
-                  </optgroup>
-                </select>
-              </div>
-            </div>
-            <div class="option-example">
-              <p>
-                <img class="true" src="images/mobile-bookmarks-sub-true.png" width="303" height="126" alt="">
-                <img class="false" src="images/mobile-bookmarks-sub-false.png" width="303" height="126" alt="">
-              </p>
-            </div>
-          </div>
-
-          <hr>
-
-          <div class="option">
-            <div class="option-choice">
-              <input type="checkbox" id="group_folders">
-            </div>
-            <div class="option-title">
-              <label for="group_folders">Folders First</label>
-            </div>
-            <div class="option-example">
-              <p>
-                <img class="true" src="images/folders-first-true.png" width="133" height="127" alt="">
-                <img class="false" src="images/folders-first-false.png" width="133" height="127" alt="">
-              </p>
-              <p>If enabled, folders will always be displayed together and sorted alphabetically (A-Z).</p>
-              <p>If disabled, folders will be sorted like the bookmarks around them.</p>
-
-            </div>
-          </div>
-
-          <hr>
-
-          <div class="option">
-            <div class="option-choice">
-              <input type="checkbox" id="create_delay">
-            </div>
-            <div class="option-title">
-              <label for="create_delay">Delay Sorting of<br>New Bookmarks</label>
-            </div>
-            <div class="option-example">
-              <p>By <input type="number" id="create_delay_detail"> seconds.</p>
-              <p>Intended for those who use the bookmarks menu, star icon, or hotkeys to create bookmarks.</p>
-              <p>If you only create bookmarks by dragging, try turning this option off.</p>
-            </div>
-          </div>
-
-          <hr>
-
-          <div id="save-area">
-            <a class="css3-button" id="save-button">Save</a>
-            <div id="options-saved">Options Saved</div>
-          </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </form>
         </div>
       </main>
     </div>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8">
 
@@ -20,22 +20,25 @@
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
       <a class="navbar-brand" href="/bookmarks.html">Neatmarks</a>
       <button
-        class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
-        aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        class="navbar-toggler d-lg-none"
+        data-target="#header-navbar"
+        data-toggle="collapse"
+        type="button"
+      >
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <div class="collapse navbar-collapse" id="header-navbar">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="/bookmarks.html">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="/bookmarks.html">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/options.html">Settings</a>
           </li>
         </ul>
-        <form class="form-inline mt-2 mt-md-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+        <form class="form-inline mt-2 mt-md-0" style="display: none">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
       </div>
@@ -86,7 +89,7 @@
         </ul>
       </nav>
 
-      <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
+      <main role="main" class="col-sm-9 ml-sm-auto mr-sm-auto col-md-10 pt-3 pb-3">
         <h1>Neatmarks</h1>
 
         <div id="app">
@@ -100,9 +103,9 @@
   <ul>
     <li v-for="node in nodes">
       <span>
-        {{ node.id }}
-        <a v-bind:href="node.url">{{ node.title }}</a>
-        {{ node.dateAdded }}
+        #{{ node.id }}
+        <a v-bind:href="node.url" v-bind:title="node.url">{{ node.title }}</a>
+        {{ new Date(node.dateAdded).toISOString().substr(0, 10) }}
       </span>
       <bm-tree v-if="node.children" v-bind:nodes="node.children"></bm-tree>
     </li>

@@ -1,6 +1,7 @@
-chrome.commands.onCommand.addListener(function (command) {
-  console.log('Command:', command)
-})
+import storage from "./lib/storage"
+
+
+chrome.commands.onCommand.addListener((...args) => console.log('Command:', ...args))
 
 // todo: Enable config sync across devices with `chrome.storage.sync`-api
 // https://developer.chrome.com/extensions/storage#property-sync
@@ -11,31 +12,8 @@ const s = {
     reorder_queue: [], // keep track of the sort order for a particular folder while it is being processed
     sort_queue: []     // keep track of which folder IDs have been queued for sorting
   },
-  ancestorID: { // keeps track of the bookmark IDs for root bookmark elements, each of these will itself have a parent with the ID of 0
-    bookmarks_bar: null, // usually ID 1
-    other_bookmarks: null, // usually ID 2
-    mobile_bookmarks: null  // usually ID 3
-  },
-  defaults: {
-    option_bookmarks_bar: 1,
-    option_bookmarks_bar_sort: 'alpha',
-    option_bookmarks_bar_sub: 1,
-    option_bookmarks_bar_sub_sort: 'alpha',
-    option_create_delay: 1,
-    option_create_delay_detail: 45,
-    option_group_folders: 1,
-    option_mobile_bookmarks: 1,
-    option_mobile_bookmarks_sort: 'alpha',
-    option_mobile_bookmarks_sub: 1,
-    option_mobile_bookmarks_sub_sort: 'alpha',
-    option_other_bookmarks: 1,
-    option_other_bookmarks_sort: 'alpha',
-    option_other_bookmarks_sub: 1,
-    option_other_bookmarks_sub_sort: 'alpha',
-  },
   delay_timer: '', // used to keep track of one setTimeout call when the option create_delay is enabled and a bookmark onCreate event has happened
-  log: false, // make sure this is false when publishing to the chrome web store
-  new_options: false, // will be set to true if new options are available
+  log: true, // make sure this is false when publishing to the chrome web store
   status: {
     import_active: false, // true if bookmarks are actively being imported
     listeners_active: false, // true if maintenance listeners are active
@@ -45,22 +23,24 @@ const s = {
     current() {
       return chrome.app.getDetails().version
     },
-    local(set) {
-      if (set === undefined) {
-        return localStorage['version']
-      } else {
-        localStorage['version'] = this.current()
+    local(version) {
+      if (version) {
+        storage.set('version', version)
       }
+
+      return storage.get('version')
     },
   },
+  option: storage.get('bookmarks_sorting', {
+    enabled: true,
+    order_by: 'alpha', // alpha | alphaReverse | date | dateReverse | url | urlReverse
+    create_delay: 1,
+    create_delay_detail: 45,
+  }),
   delay_sort,
-  findAncestors,
-  get,
   get_ancestor_then_sort,
   init,
-  install_or_upgrade,
   listeners,
-  ready_options,
   recent_folders_search,
   reorder,
   reorder_queue,
@@ -70,30 +50,9 @@ const s = {
 }
 
 
-function local_version_less_than(local, compare) {
-  var outcome = false
-  local = local.split('.').reverse()
-  compare = compare.split('.').reverse()
-  var i = local.length
-  while (i--) { // convert every element to integers for easy comparison
-    local[i] = int(local[i])
-    compare[i] = int(compare[i])
-  }
-  i = local.length
-  the_ice:
-    while (i--) {
-      if (local[i] > compare[i]) {
-        break the_ice
-      } else if (local[i] < compare[i]) {
-        outcome = true
-        break the_ice // especially at parties
-      }
-    }
-  return outcome
-}
-function log(o) {
+function log(...args) {
   if (s.log) {
-    console.log(o)
+    console.log(...args)
   }
 }
 function int(val) {
@@ -101,26 +60,17 @@ function int(val) {
 }
 function stop_collaborate_and_listen(request, sender, sendResponse) {
   // Ice is back with a brand new function
-  if (request.request === 'options') {
-    // return all our options
-    sendResponse(s.option)
-  } else if (request.request === 'options_set') {
-    // set our options
-    var val
-    log(request.option)
-    s.option = request.option // overwrite our local copy of options with any potentially changed values
-    for (var i in s.option) { // save all options to localStorage
-      if (s.option[i] === true) {
-        val = 1
-      } else if (s.option[i] === false) {
-        val = 0
-      } else {
-        val = s.option[i]
-      }
-      localStorage['option_' + i] = val
-    }
-    sendResponse({'message': 'thanks'})
-    s.resort()
+  switch (request.request) {
+    case 'options':
+      sendResponse(s.option)
+      break
+    case 'options_set':
+      s.option = request.option // overwrite our local copy of options with any potentially changed values
+      storage.merge(s.option)
+
+      sendResponse({'message': 'thanks'})
+      s.resort()
+      break
   }
 }
 function delay_sort() {
@@ -131,78 +81,15 @@ function delay_sort() {
   }
   s.a.delay_queue = []
 }
-function findAncestors(callback) {
-  /*
-  Find IDs for root level containers like the Bookmarks Bar, Mobile Bookmarks, and Other Bookmarks.
-  @param  {Function}  [callback]  Optional callback function.
-
-  Callback Usage
-      s.findAncestors(function() { console.log('done') })
-  */
-  chrome.bookmarks.getChildren('0', function (o) {
-    for (var i in o) {
-      var title = o[i].title.toLowerCase()
-      var id = int(o[i].id)
-
-      if (title === 'bookmarks bar') {
-        s.ancestorID.bookmarks_bar = id
-      } else if (title === 'other bookmarks') {
-        s.ancestorID.other_bookmarks = id
-      } else if (title === 'mobile bookmarks') {
-        s.ancestorID.mobile_bookmarks = id
-      }
-    }
-
-    if (s.ancestorID.bookmarks_bar === null) {
-      s.ancestorID.bookmarks_bar = 1 // best guess
-      console.log('s.findAncestors -> Had to guess ID for s.ancestorID.bookmarks_bar')
-    }
-
-    if (s.ancestorID.other_bookmarks === null) {
-      s.ancestorID.other_bookmarks = 2 // best guess
-      console.log('s.findAncestors -> Had to guess ID for s.ancestorID.other_bookmarks')
-    }
-
-    if (s.ancestorID.mobile_bookmarks === null) {
-      s.ancestorID.mobile_bookmarks = 3 // best guess
-      console.log('s.findAncestors -> Had to guess ID for s.ancestorID.mobile_bookmarks')
-    }
-
-    if (typeof(callback) === 'function') {
-      callback()
-    }
-  })
-}
-function get(id, callback) { //
-  /*
-  Helper function for humans that are poking around.
-  @param  {Number}    id          Bookmark ID.
-  @param  {Function}  [callback]  Optional callback function.
-
-  Callback Usage
-      s.get(123, function(obj) { a = obj })
-  */
-  chrome.bookmarks.get(id.toString(), function (obj) {
-    if (typeof(callback) === 'function') {
-      callback(obj[0])
-    } else {
-      console.log(obj[0])
-    }
-  })
-}
 function get_ancestor_then_sort(id, relay_id, parent_id, recurse) {
-  chrome.bookmarks.get(id.toString(), function (o) {
-    if (typeof o === 'undefined') {
+  chrome.bookmarks.get(id.toString(), o => {
+    if (typeof o === 'undefined' || int(o[0].parentId) === 0) {
       // oops, the bookmark we wanted to sort has been deleted before we could get to it
-      s.sort(relay_id, parent_id, recurse, id)
-    } else {
-      if (int(o[0].parentId) === 0) {
-        s.sort(relay_id, parent_id, recurse, id)
-      } else {
-        // keep searching for the eldest ancestor
-        s.get_ancestor_then_sort(o[0].parentId, relay_id, parent_id, recurse)
-      }
+      return s.sort(relay_id, parent_id, recurse, id)
     }
+
+    // keep searching for the eldest ancestor
+    return s.get_ancestor_then_sort(o[0].parentId, relay_id, parent_id, recurse)
   })
 }
 function init() {
@@ -210,111 +97,27 @@ function init() {
     s.status.import_active = true
     log('Import began')
   })
-
   chrome.bookmarks.onImportEnded.addListener(function () {
     log('Import finished')
-
-    s.findAncestors(function () {
-      chrome.bookmarks.getChildren('0', function (o) {
-        for (var i in o) {
-          s.a.sort_queue.push(o[i].id)
-          s.sort(o[i].id, o[i].id, 'recurse')
-        }
-        s.status.import_active = false
-      })
+    chrome.bookmarks.getChildren('0', o => {
+      for (const {id} of o) {
+        s.a.sort_queue.push(id)
+        s.sort(id, id, 'recurse')
+      }
+      s.status.import_active = false
     })
   })
-
-  chrome.bookmarks.onMoved.addListener(function (id, moveInfo) { // this listener is always active by intention
-    if (!s.status.import_active) {
-      log('onMoved (all time) > id = ' + id)
-      s.reorder_queue(moveInfo.parentId)
-    }
+  chrome.bookmarks.onMoved.addListener((id, moveInfo) => { // this listener is always active by intention
+    if (s.status.import_active) return
+    log('onMoved (all time) > id = ' + id)
+    s.reorder_queue(moveInfo.parentId)
   })
-
-  s.findAncestors(function () {
-    chrome.bookmarks.getChildren('0', function (o) {
-      for (var i in o) {
-        s.sort(o[i].id, o[i].id, 'recurse')
-      }
-      setTimeout(s.listeners, 500) // wait a short while before attempting to activate bookmark change listeners so we don't get notified about our own initial sorting activity
-    })
-  })
-}
-function install_or_upgrade() {
-  var local_version = s.version.local()
-  var check_version = ''
-
-  // If the localStorage version does not match our manifest version then we have a first install or upgrade.
-  if (local_version !== s.version.current()) {
-    if (local_version === undefined) {
-      // first install
-      log('First install')
-
-      localStorage['option_bookmarks_bar'] = s.defaults.option_bookmarks_bar
-      localStorage['option_bookmarks_bar_sort'] = s.defaults.option_bookmarks_bar_sort
-      localStorage['option_bookmarks_bar_sub'] = s.defaults.option_bookmarks_bar_sub
-      localStorage['option_bookmarks_bar_sub_sort'] = s.defaults.option_bookmarks_bar_sub_sort
-      localStorage['option_create_delay'] = s.defaults.option_create_delay
-      localStorage['option_create_delay_detail'] = s.defaults.option_create_delay_detail
-      localStorage['option_group_folders'] = s.defaults.option_group_folders
-      localStorage['option_mobile_bookmarks'] = s.defaults.option_mobile_bookmarks
-      localStorage['option_mobile_bookmarks_sort'] = s.defaults.option_mobile_bookmarks_sort
-      localStorage['option_mobile_bookmarks_sub'] = s.defaults.option_mobile_bookmarks_sub
-      localStorage['option_mobile_bookmarks_sub_sort'] = s.defaults.option_mobile_bookmarks_sub_sort
-      localStorage['option_other_bookmarks'] = s.defaults.option_other_bookmarks
-      localStorage['option_other_bookmarks_sort'] = s.defaults.option_other_bookmarks_sort
-      localStorage['option_other_bookmarks_sub'] = s.defaults.option_other_bookmarks_sub
-      localStorage['option_other_bookmarks_sub_sort'] = s.defaults.option_other_bookmarks_sub_sort
-      s.new_options = true
-    } else {
-      // check for upgrade tasks
-      var messageUpgrade = 'Upgrade task for versions less than: '
-
-      check_version = '2012.8.13.0'
-      if (local_version_less_than(local_version, check_version)) {
-        log(messageUpgrade + check_version)
-        // remove the console logging option
-        localStorage.removeItem('option_console_logs')
-        s.new_options = true
-      }
-
-      check_version = '2012.10.15.0'
-      if (local_version_less_than(local_version, check_version)) {
-        log(messageUpgrade + check_version)
-        // add the delay sorting for new bookmarks option
-        localStorage['option_create_delay'] = s.defaults.option_create_delay
-        localStorage['option_create_delay_detail'] = s.defaults.option_create_delay_detail
-        s.new_options = true
-      }
-
-      check_version = '2015.7.6.0'
-      if (local_version_less_than(local_version, check_version)) {
-        log(messageUpgrade + check_version)
-        // remove google sync workaround
-        localStorage.removeItem('option_sync')
-      }
-
-      check_version = '2016.4.6.0'
-      if (local_version_less_than(local_version, check_version)) {
-        log(messageUpgrade + check_version)
-        // add new sorting options
-        s.new_options = true
-      }
-
-      check_version = '2016.11.6.0'
-      if (local_version_less_than(local_version, check_version)) {
-        log(messageUpgrade + check_version)
-        // add new mobile bookmarks sorting options
-        localStorage['option_mobile_bookmarks_sort'] = s.defaults.option_mobile_bookmarks_sort
-        localStorage['option_mobile_bookmarks_sub_sort'] = s.defaults.option_mobile_bookmarks_sub_sort
-        s.new_options = true
-      }
+  chrome.bookmarks.getChildren('0', o => {
+    for (const {id} of o) {
+      s.sort(id, id, 'recurse')
     }
-
-    // update the localStorage version for next time
-    s.version.local('set')
-  }
+    setTimeout(s.listeners, 500) // wait a short while before attempting to activate bookmark change listeners so we don't get notified about our own initial sorting activity
+  })
 }
 function listeners() {
   if (s.status.sort_active > 0) {
@@ -336,7 +139,6 @@ function listeners() {
         }
       }
     })
-
     chrome.bookmarks.onChanged.addListener(function (id, changeInfo) {
       if (!s.status.import_active) {
         log('onChanged > id = ' + id)
@@ -345,7 +147,6 @@ function listeners() {
         })
       }
     })
-
     chrome.bookmarks.onMoved.addListener(function (id, moveInfo) {
       if (!s.status.import_active) {
         log('onMoved > id = ' + id + ', ' + moveInfo.parentId)
@@ -354,50 +155,14 @@ function listeners() {
         s.sort_buffer(id, moveInfo.parentId)
       }
     })
-
     chrome.bookmarks.onChildrenReordered.addListener(function (id, reorderInfo) {
       // seems like onChildrenReordered only gets called if you use the 'Reorder by Title' function in the Bookmark Manager
       if (!s.status.import_active) {
         log('onChildrenReordered > id = ' + id)
-        // Chrome sorts nicely in this situation (folders then files) but if the user likes folders and files mixed we should run our sort.
-        if (!s.option.group_folders) {
-          s.sort_buffer(id, id)
-        }
       }
     })
     log('All listeners active.\n')
   }
-}
-function ready_options() {
-  //---------------------------------------------------
-  // Set options based on localStorage values (if any)
-  //---------------------------------------------------
-  s.option = {
-    bookmarks_bar: !!localStorage['option_bookmarks_bar'],
-    bookmarks_bar_sort: localStorage['option_bookmarks_bar_sort'] || s.defaults.option_bookmarks_bar_sort,
-    bookmarks_bar_sub: !!localStorage['option_bookmarks_bar_sub'],
-    bookmarks_bar_sub_sort: localStorage['option_bookmarks_bar_sub_sort'] || s.defaults.option_bookmarks_bar_sub_sort,
-    create_delay: !!localStorage['option_create_delay'],
-    create_delay_detail: (localStorage['option_create_delay_detail'] >= 0) ? localStorage['option_create_delay_detail'] : s.defaults.option_create_delay_detail,
-    group_folders: !!localStorage['option_group_folders'],
-    mobile_bookmarks: !!localStorage['option_mobile_bookmarks'],
-    mobile_bookmarks_sort: localStorage['option_mobile_bookmarks_sort'] || s.defaults.option_mobile_bookmarks_sort,
-    mobile_bookmarks_sub: !!localStorage['option_mobile_bookmarks_sub'],
-    mobile_bookmarks_sub_sort: localStorage['option_mobile_bookmarks_sub_sort'] || s.defaults.option_mobile_bookmarks_sub_sort,
-    other_bookmarks: !!localStorage['option_other_bookmarks'],
-    other_bookmarks_sort: localStorage['option_other_bookmarks_sort'] || s.defaults.option_other_bookmarks_sort,
-    other_bookmarks_sub: !!localStorage['option_other_bookmarks_sub'],
-    other_bookmarks_sub_sort: localStorage['option_other_bookmarks_sub_sort'] || s.defaults.option_other_bookmarks_sub_sort,
-  }
-
-  if (s.new_options) {
-    // first time or new options are available so show the options page
-    log('New options are available.')
-    // todo: notify by icon marks
-    // chrome.tabs.create({url: 'options.html'})
-  }
-
-  log('Ready to sort.')
 }
 function recent_folders_search(id) {
   id = int(id)
@@ -486,245 +251,168 @@ function reorder_queue(parent_id) {
   s.status.sort_active--
 }
 function resort() {
-  s.findAncestors(function () {
-    chrome.bookmarks.getChildren('0', function (bookmarks) {
-      for (const bm of bookmarks) {
-        s.sort(bm.id, bm.id, 'recurse')
-      }
-    })
+  chrome.bookmarks.getChildren('0', function (bookmarks) {
+    for (const bm of bookmarks) {
+      s.sort(bm.id, bm.id, 'recurse')
+    }
   })
 }
-function sort(id, parent_id, recurse, ancestor) {
+function sort(id, parent_id = id, recurse = false, ancestor) {
   id = int(id)
-
-  parent_id = int(parent_id === undefined ? id : parent_id)
-  recurse = (recurse === undefined) ? false : recurse
-
-  if (id === s.ancestorID.bookmarks_bar || id === s.ancestorID.other_bookmarks || id === s.ancestorID.mobile_bookmarks) {
-    ancestor = id // be your own ancestor with time travel!
-  }
+  parent_id = int(parent_id)
 
   ancestor = (ancestor === undefined) ? -1 : int(ancestor)
+
   if (ancestor < 0) {
     s.get_ancestor_then_sort(id, id, parent_id, recurse)
   } else {
-    chrome.bookmarks.getChildren(parent_id.toString(), function (a) {
-      var allow_recurse = true,
-        break_sort = false
+    chrome.bookmarks.getChildren(parent_id.toString(), childrens => {
+      let allow_recurse = true
+      let break_sort = false
 
-      if (parent_id === s.ancestorID.bookmarks_bar && !s.option.bookmarks_bar) {
-        log('No need to sort Bookmarks Bar root.')
-        break_sort = true
-        if (!s.option.bookmarks_bar_sub) {
-          // no need for subs either
-          log('No need to sort Bookmarks Bar Sub Folders.')
-          allow_recurse = false
-        }
-      } else if (ancestor !== parent_id && ancestor === s.ancestorID.bookmarks_bar && !s.option.bookmarks_bar_sub) {
-        log('No need to sort Bookmarks Bar Sub Folders.')
-        allow_recurse = false
-        break_sort = true
-      } else if (parent_id === s.ancestorID.other_bookmarks && !s.option.other_bookmarks) {
-        log('No need to sort Other Bookmarks root.')
-        break_sort = true
-        if (!s.option.other_bookmarks_sub) {
-          // no need for subs either
-          log('No need to sort Other Bookmarks Sub Folders.')
-          allow_recurse = false
-        }
-      } else if (ancestor !== parent_id && ancestor === s.ancestorID.other_bookmarks && !s.option.other_bookmarks_sub) {
-        log('No need to sort Other Bookmarks Sub Folders.')
-        allow_recurse = false
-        break_sort = true
-      } else if (parent_id === s.ancestorID.mobile_bookmarks && !s.option.mobile_bookmarks) {
-        log('No need to sort Mobile Bookmarks root.')
-        break_sort = true
-        if (!s.option.mobile_bookmarks_sub) {
-          // no need for subs either
-          log('No need to sort Mobile Bookmarks Sub Folders.')
-          allow_recurse = false
-        }
-      } else if (ancestor !== parent_id && ancestor === s.ancestorID.mobile_bookmarks && !s.option.mobile_bookmarks_sub) {
-        log('No need to sort Mobile Bookmarks Sub Folders.')
-        allow_recurse = false
+      if (!s.option.enabled) {
+        log('No need to sort Bookmarks root.')
         break_sort = true
       }
 
       if (allow_recurse && recurse) {
-        for (var i in a) {
-          if (a[i].url === undefined) {
+        for (const i in childrens) {
+          if (childrens[i].url === undefined) {
             // we have a folder so recursively call our own function to support unlimited folder depth
-            s.sort(a[i].id, a[i].id, recurse, ancestor)
+            s.sort(childrens[i].id, childrens[i].id, recurse, ancestor)
           }
         }
       }
 
-      if (break_sort || a.length < 2) {
+      if ((break_sort || childrens.length < 2) && s.status.listeners_active) {
         // remove folder from the queue but only if the listeners are active (aka we finished the initial import)
-        if (s.status.listeners_active) {
-          log('s.sort > No need to reorder, removing parent folder from \'s.a.sort_queue\'')
-          setTimeout(function () {
-            s.a.sort_queue.splice(s.a.sort_queue.indexOf(parent_id).toString(), 1)
-          }, 500)
-        }
+        log('s.sort > No need to reorder, removing parent folder from \'s.a.sort_queue\'')
+        setTimeout(() => s.a.sort_queue.splice(s.a.sort_queue.indexOf(parent_id).toString(), 1), 500)
         return
       }
 
-      if (a.length > 1) { // we have a non-empty folder with more than 1 item so sort it
+      if (childrens.length < 2) return
+      // we have a non-empty folder with more than 1 item so sort it
 
-        // build a string of index values so we can compare against a sorted string to determine if we need to call the reorder function
-        var indexBefore = ''
+      // build a string of index values so we can compare against a sorted string to determine if we need to call the reorder function
+      const indexBefore = childrens.reduce((p, c) => p + c.index, '')
 
-        for (var aI in a) {
-          indexBefore += a[aI].index
+      childrens.sort(function (a, b) {
+        var sort = ''
+
+        var isFolderA = (a.url === undefined) ? true : false
+        var isFolderB = (b.url === undefined) ? true : false
+
+        // sort favoring folders first then files
+        if (isFolderA && !isFolderB) {
+          sort = -1
+        } else if (!isFolderA && isFolderB) {
+          sort = 1
         }
 
-        function title(o) {
-          return o.title.toLowerCase()
-        }
+        if (sort === '') {
+          var valA, valB
 
-        function date(o) {
-          return (typeof(o.dateAdded) === 'number') ? o.dateAdded : 0
-        }
-
-        function url(o) {
-          var value = o.url
-
-          if (value === undefined) {
-            value = ''
+          if (isFolderA && isFolderB) {
+            // sort by title
+            valA = title(a)
+            valB = title(b)
           } else {
-            value = o.url.toLowerCase()
-            value = value.replace('http://', '').replace('https://', '').replace('ftp://', '').replace('chrome://', '').replace('www.', '')
-          }
+            const sortOrder = s.option.option_bookmarks_order_by || ''
 
-          return value
-        }
-
-        a.sort(function (a, b) {
-          var sort = ''
-
-          var isFolderA = (a.url === undefined) ? true : false
-          var isFolderB = (b.url === undefined) ? true : false
-
-          if (s.option.group_folders) { // sort favoring folders first then files
-            if (isFolderA && !isFolderB) {
-              sort = -1
-            } else if (!isFolderA && isFolderB) {
-              sort = 1
-            }
-          }
-
-          if (sort === '') {
-            var valA, valB
-
-            if (s.option.group_folders && isFolderA && isFolderB) {
-              // sort by title
+            if (sortOrder === 'alpha' || sortOrder === '') {
               valA = title(a)
               valB = title(b)
+            } else if (sortOrder === 'alphaReverse') {
+              valA = title(b)
+              valB = title(a)
+            } else if (sortOrder === 'date') {
+              valA = date(b)
+              valB = date(a)
+            } else if (sortOrder === 'dateReverse') {
+              valA = date(a)
+              valB = date(b)
+            } else if (sortOrder === 'url') {
+              valA = url(a)
+              valB = url(b)
+            } else if (sortOrder === 'urlReverse') {
+              valA = url(b)
+              valB = url(a)
             } else {
-              var sortOrder = ''
-
-              if (parent_id === s.ancestorID.bookmarks_bar) {
-                // bookmarks bar
-                sortOrder = s.option.bookmarks_bar_sort
-              } else if (ancestor !== parent_id && ancestor === s.ancestorID.bookmarks_bar) {
-                // bookmarks bar sub folders
-                sortOrder = s.option.bookmarks_bar_sub_sort
-              } else if (parent_id === s.ancestorID.other_bookmarks) {
-                // other bookmarks
-                sortOrder = s.option.other_bookmarks_sort
-              } else if (ancestor !== parent_id && ancestor === s.ancestorID.other_bookmarks) {
-                // other bookmarks sub folders
-                sortOrder = s.option.other_bookmarks_sub_sort
-              } else if (parent_id === s.ancestorID.mobile_bookmarks) {
-                // mobile bookmarks
-                sortOrder = s.option.mobile_bookmarks_sort
-              } else if (ancestor !== parent_id && ancestor === s.ancestorID.mobile_bookmarks) {
-                // mobile bookmarks sub folders
-                sortOrder = s.option.mobile_bookmarks_sub_sort
-              }
-
-              if (sortOrder === 'alpha' || sortOrder === '') {
-                valA = title(a)
-                valB = title(b)
-              } else if (sortOrder === 'alphaReverse') {
-                valA = title(b)
-                valB = title(a)
-              } else if (sortOrder === 'date') {
-                valA = date(b)
-                valB = date(a)
-              } else if (sortOrder === 'dateReverse') {
-                valA = date(a)
-                valB = date(b)
-              } else if (sortOrder === 'url') {
-                valA = url(a)
-                valB = url(b)
-              } else if (sortOrder === 'urlReverse') {
-                valA = url(b)
-                valB = url(a)
-              } else {
-                valA = title(a)
-                valB = title(b)
-              }
+              valA = title(a)
+              valB = title(b)
             }
+          }
 
-            if (valA < valB) {
+          if (valA < valB) {
+            sort = -1
+          } else if (valA > valB) {
+            sort = 1
+          } else {
+            sort = 0 // default return value (no sorting)
+
+            // there is a case when two items have the same name they will trade places every sort
+            // to combat this we'll get more and more specific so there will never be a 0 sort order returned
+
+            // sort on case
+            if (a.title < b.title) {
               sort = -1
-            } else if (valA > valB) {
+            } else if (a.title > b.title) {
               sort = 1
             } else {
-              sort = 0 // default return value (no sorting)
-
-              // there is a case when two items have the same name they will trade places every sort
-              // to combat this we'll get more and more specific so there will never be a 0 sort order returned
-
-              // sort on case
-              if (a.title < b.title) {
+              // another 0 so let's get even more specific
+              if (a.url < b.url) {
                 sort = -1
-              } else if (a.title > b.title) {
+              } else if (a.url > b.url) {
                 sort = 1
               } else {
-                // another 0 so let's get even more specific
-                if (a.url < b.url) {
+                // item with the earlier id is going to be first
+                if (a.id < b.id) {
                   sort = -1
-                } else if (a.url > b.url) {
-                  sort = 1
                 } else {
-                  // item with the earlier id is going to be first
-                  if (a.id < b.id) {
-                    sort = -1
-                  } else {
-                    sort = 1
-                  }
+                  sort = 1
                 }
               }
             }
           }
-
-          return sort
-        })
-
-        var indexAfter = ''
-
-        for (var aJ in a) {
-          indexAfter += a[aJ].index
         }
 
-        if (indexBefore !== indexAfter) {
-          log('s.sort > indexBefore = ' + indexBefore)
-          log('s.sort > indexAfter = ' + indexAfter)
-          s.reorder(a)
-        } else {
-          // remove folder from the queue but only if the listeners are active (aka we finished the initial import)
-          if (s.status.listeners_active) {
-            log('s.sort > No need to reorder, removing parent folder from \'s.a.sort_queue\'')
-            setTimeout(function () {
-              s.a.sort_queue.splice(s.a.sort_queue.indexOf(parent_id).toString(), 1)
-            }, 500)
-          }
-        }
+        return sort
+      })
+
+      const indexAfter = childrens.reduce((p, c) => p + c.index, '')
+
+      if (indexBefore !== indexAfter) {
+        log('s.sort > indexBefore = ' + indexBefore)
+        log('s.sort > indexAfter = ' + indexAfter)
+        return s.reorder(childrens)
+      }
+
+      // remove folder from the queue but only if the listeners are active (aka we finished the initial import)
+      if (s.status.listeners_active) {
+        log('s.sort > No need to reorder, removing parent folder from \'s.a.sort_queue\'')
+        setTimeout(() => s.a.sort_queue.splice(s.a.sort_queue.indexOf(parent_id).toString(), 1), 500)
       }
     })
+  }
+
+  function title(o) {
+    return o.title.toLowerCase()
+  }
+  function date(o) {
+    return (typeof(o.dateAdded) === 'number') ? o.dateAdded : 0
+  }
+  function url(o) {
+    var value = o.url
+
+    if (value === undefined) {
+      value = ''
+    } else {
+      value = o.url.toLowerCase()
+      value = value.replace('http://', '').replace('https://', '').replace('ftp://', '').replace('chrome://', '').replace('www.', '')
+    }
+
+    return value
   }
 }
 function sort_buffer(id, parent_id) {
@@ -744,7 +432,5 @@ function sort_buffer(id, parent_id) {
 }
 
 
-s.install_or_upgrade()
-s.ready_options()
 chrome.extension.onMessage.addListener(stop_collaborate_and_listen)
 s.init()

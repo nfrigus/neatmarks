@@ -1,6 +1,6 @@
 {
   "name": "neatmarks",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "",
   "scripts": {
     "build": "gulp",
@@ -15,7 +15,7 @@
   "dependencies": {
     "bootstrap": "^4.0.0-beta.2",
     "jquery": "^3.2.1",
-    "mosi": "0.0.12",
+    "mosi": "^1.6.0",
     "popper.js": "^1.12.6",
     "vue": "^2.5.2"
   },
