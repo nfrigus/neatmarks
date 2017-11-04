@@ -31,6 +31,7 @@ gulp.task('crx', [
 ], run('npm run build:crx'))
 gulp.task('build', ['crx'])
 gulp.task('build:clean', ['clean'], () => gulp.start('build'))
+gulp.task('build:prod', run('npm run build:prod'))
 
 gulp.task('default', ['build:clean'])
 

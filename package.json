@@ -1,6 +1,6 @@
 {
   "name": "neatmarks",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "",
   "scripts": {
     "build": "gulp",
@@ -13,6 +13,7 @@
   "author": "",
   "license": "WTFPL",
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "bootstrap": "^4.0.0-beta.2",
     "jquery": "^3.2.1",
     "mosi": "^1.6.0",
@@ -23,6 +24,7 @@
     "autoprefixer": "^7.1.6",
     "babel-core": "^6.22.1",
     "babel-loader": "^6.2.10",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.1.8",
     "chrome-webstore-upload-cli": "^1.1.1",
     "cross-env": "^5.1.1",
