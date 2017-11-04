@@ -1,13 +1,9 @@
 {
   "name": "neatmarks",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "",
   "scripts": {
-    "build": "gulp",
-    "build:crx": "crx pack -o dist/dist.crx dist",
-    "build:prod": "cross-env NODE_ENV=production gulp",
-    "build:webpack": "webpack",
-    "start": "npm run build && webpack --watch"
+    "start": "gulp"
   },
   "keywords": [],
   "author": "",
@@ -40,6 +36,7 @@
     "file-loader": "^0.10.0",
     "gulp": "^3.9.1",
     "gulp-copy": "^1.0.1",
+    "gulp-run": "^1.7.1",
     "node-sass": "^4.5.3",
     "postcss-loader": "^2.0.8",
     "precss": "^2.0.0",

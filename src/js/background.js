@@ -71,7 +71,7 @@ const reorderQueue = {
 
 // Utils
 function log(...args) {
-  if (state.log) {
+  if (process.env.NODE_ENV !== 'production') {
     console.log(...args)
   }
 }

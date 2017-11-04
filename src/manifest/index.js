@@ -5,6 +5,7 @@ const config = {
   ...require('./meta'),
   ...require('./security'),
   ...require('./entry_points'),
+  commands: require('./commands'),
 }
 
 module.exports = {

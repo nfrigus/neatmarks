@@ -1,8 +1,8 @@
 const del = require('del')
 const gulp = require('gulp')
 const manifest = require('./src/manifest')
+const Run = require('gulp-run')
 const svg2png = require('svg2png')
-const {exec} = require('child_process')
 const {promisify} = require('util')
 const {readFileSync, writeFile} = require('fs')
 
@@ -22,16 +22,19 @@ gulp.task('icon', ['assets'], () => convertSvg2Pngs({
   src: 'src/icons/icon.svg',
 }))
 gulp.task('manifest', ['assets'], () => manifest.write('dist'))
-gulp.task('webpack', run('npm run build:webpack'))
+gulp.task('webpack', run('webpack'))
 gulp.task('crx', [
   'assets',
   'icon',
   'manifest',
   'webpack',
-], run('npm run build:crx'))
+], run('crx pack -o dist/dist.crx dist'))
 gulp.task('build', ['crx'])
 gulp.task('build:clean', ['clean'], () => gulp.start('build'))
-gulp.task('build:prod', run('npm run build:prod'))
+gulp.task('build:prod', () => {
+  process.env.NODE_ENV = 'production'
+  return gulp.start('build:clean')
+})
 
 gulp.task('default', ['build:clean'])
 
@@ -49,9 +52,5 @@ async function convertSvg2Pngs({
 }
 
 function run(command) {
-  return cb => exec(command, (err, stdout, stderr) => {
-    console.log(stdout)
-    console.error(stderr)
-    cb(err)
-  })
+  return () => Run(command).exec()
 }
