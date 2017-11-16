@@ -1,18 +1,12 @@
 import 'bootstrap'
+import App from './components/App.vue'
 
 
 $(() => {
-  Vue.component('bm-tree', {
-    props: ['nodes'],
-    template: '#bm-tree-component',
-  })
-
-  const app = new Vue({
+  new Vue({
     el: '#app',
-    data: {
-      bookmarks: [],
-    },
+    render: h => h(App),
   })
 
-  chrome.bookmarks.getTree(nodes => app.bookmarks = nodes)
+  $('[data-bm-id]', document.body).on('dragstart dragend', console.log)
 })

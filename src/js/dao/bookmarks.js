@@ -5,8 +5,9 @@ if (!bookmarks) {
 }
 
 export default {
-  getChildren,
   get,
+  getChildren,
+  getTree,
   move,
 }
 
@@ -39,4 +40,7 @@ async function get(ids) {
       : result[0],
     ),
   ))
+}
+async function getTree() {
+  return new Promise(resolve => chrome.bookmarks.getTree(resolve))
 }
