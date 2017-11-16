@@ -58,6 +58,15 @@ const rules = [
     exclude: /node_modules/,
   },
   {
+    test: /\.vue$/,
+    loader: 'vue-loader',
+    options: {
+      loaders: {
+        js: 'babel-loader',
+      },
+    },
+  },
+  {
     test: /\.scss$/,
     use: scss_loader,
   },

@@ -14,7 +14,7 @@
     "jquery": "^3.2.1",
     "mosi": "^1.6.0",
     "popper.js": "^1.12.6",
-    "vue": "^2.5.2"
+    "vue": "^2.5.3"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.6",
@@ -42,6 +42,8 @@
     "precss": "^2.0.0",
     "sass-loader": "^6.0.6",
     "svg2png": "^4.1.1",
+    "vue-loader": "^13.5.0",
+    "vue-template-compiler": "^2.5.3",
     "webpack": "^3.8.1",
     "webpack-stream": "^4.0.0"
   }
