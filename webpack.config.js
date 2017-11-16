@@ -35,7 +35,7 @@ const plugins = [
 const scss_loader = ExtractTextPlugin.extract({
   use: [{
     loader: 'css-loader',
-    options: {sourceMap},
+    options: { sourceMap },
   }, {
     loader: 'postcss-loader',
     options: {
@@ -48,7 +48,7 @@ const scss_loader = ExtractTextPlugin.extract({
     },
   }, {
     loader: 'sass-loader',
-    options: {sourceMap},
+    options: { sourceMap },
   }],
 })
 const rules = [
@@ -69,6 +69,17 @@ const rules = [
   {
     test: /\.scss$/,
     use: scss_loader,
+  },
+  {
+    test: /.(ttf|otf|eot|svg|woff2?)(\?[a-z0-9]+)?$/,
+    use: [{
+      loader: 'file-loader',
+      options: {
+        name: '[name].[ext]',
+        outputPath: '../fonts/',
+        publicPath: '/fonts/',
+      },
+    }],
   },
 ]
 
@@ -99,7 +110,7 @@ module.exports = [{
 }].map(makeConfig)
 
 
-function isVendorModule({context}) {
+function isVendorModule({ context }) {
   return typeof context === 'string'
     ? /\/node_modules\/.*\.js$/.test(context)
     : false
@@ -108,7 +119,7 @@ function makeConfig(extend) {
   const config = {
     devtool: 'source-map',
     plugins,
-    module: {rules},
+    module: { rules },
   }
   Object.keys(extend).forEach(key => {
     if (Array.isArray(config[key])) {
