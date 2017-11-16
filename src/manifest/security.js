@@ -1,5 +1,5 @@
 module.exports = {
-  content_security_policy: "script-src 'self' 'unsafe-eval' object-src 'self'",
+  content_security_policy: "script-src 'self' object-src 'self'",
   incognito: "spanning",
   permissions: [
     "background",
