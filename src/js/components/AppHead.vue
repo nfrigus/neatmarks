@@ -1,7 +1,7 @@
 <template>
   <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <a class="navbar-brand" href="/bookmarks.html">Neatmarks</a>
+      <router-link class="navbar-brand" to="/bookmarks.html">Neatmarks</router-link>
       <button
         class="navbar-toggler d-lg-none"
         data-target="#header-navbar"
@@ -13,12 +13,12 @@
 
       <div class="collapse navbar-collapse" id="header-navbar">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/bookmarks.html">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/options.html">Settings</a>
-          </li>
+          <router-link active-class="active" tag="li" class="nav-item" to="/bookmarks.html">
+            <a class="nav-link">Home</a>
+          </router-link>
+          <router-link active-class="active" tag="li" class="nav-item" to="/options.html">
+            <a class="nav-link">Settings</a>
+          </router-link>
         </ul>
         <form class="form-inline mt-2 mt-md-0" style="display: none">
           <input class="form-control mr-sm-2" type="text" placeholder="Search">

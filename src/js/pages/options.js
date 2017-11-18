@@ -1,25 +1,24 @@
-const s = {
-  action: {
-    init,
-    restore_options,
-    save_options,
-  },
-  option: {},
+let option = {}
+
+
+export default {
+  init,
 }
 
+
 function init() {
-  chrome.extension.sendMessage({'request': 'options'}, response => {
-    s.option = response // all our options are based on background.js which should be considered authoritative
-    s.action.restore_options()
+  chrome.extension.sendMessage({ 'request': 'options' }, response => {
+    option = response // all our options are based on background.js which should be considered authoritative
+    restore_options()
 
     $('#options-form').submit(e => {
       e.preventDefault()
-      s.action.save_options()
+      save_options()
     })
   })
 }
 function restore_options() {
-  Object.keys(s.option).forEach(key => {
+  Object.keys(option).forEach(key => {
     const node = document.querySelector(`[data-option="${key}"]`)
     if (!node) {
       return console.error('Node for option %s is not found', key)
@@ -27,10 +26,10 @@ function restore_options() {
 
     switch (node.type) {
       case 'checkbox':
-        node.checked = s.option[key]
+        node.checked = option[key]
         break
       default:
-        node.value = s.option[key]
+        node.value = option[key]
     }
   })
 }
@@ -45,18 +44,14 @@ function save_options() {
 
   $options.forEach(node => {
     const accessor = inputParsers[node.type] || inputParsers.default
-    s.option[node.dataset.option] = accessor(node)
+    option[node.dataset.option] = accessor(node)
   })
 
   chrome.extension.sendMessage({
     request: 'options_set',
-    option: s.option,
+    option: option,
   }, animateOptionsSave)
 }
 function animateOptionsSave() {
   window.alert('Options updated.')
 }
-
-$(() => {
-  s.action.init()
-})

@@ -11,7 +11,6 @@ const plugins_js = [
     'window.jQuery': 'jquery',
     jQuery: 'jquery',
     Popper: ['popper.js', 'default'],
-    Vue: ['vue/dist/vue.esm.js', 'default'],
   }),
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendors',
@@ -86,11 +85,9 @@ const rules = [
 
 module.exports = [{
   entry: {
+    app: './src/js/app.js',
     background: './src/js/background.js',
-    bookmarks: './src/js/bookmarks.js',
     content_script: './src/js/content_script.js',
-    options: './src/js/options.js',
-    popup: './src/js/popup.js',
   },
   output: {
     filename: '[name].js',
