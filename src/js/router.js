@@ -13,6 +13,7 @@ const router = new VueRouter({
   routes: [
     { path: '/bookmarks.html', component: BMPage },
     { path: '/options.html', component: OptionPage },
+    { path: '/popup.html', component: () => chrome.tabs.create({ url: '/bookmarks.html' }) },
   ],
 })
 

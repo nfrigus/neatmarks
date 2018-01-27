@@ -1,14 +1,11 @@
-const {icons} = require('./meta')
+const { icons } = require('./meta')
 
 module.exports = {
-  chrome_url_overrides: {
-    bookmarks: "bookmarks.html",
-  },
+  chrome_url_overrides: {},
   browser_action: {
     default_icon: icons,
     default_title: "__MSG_extBtnTitle__",
-    // todo: add browser action popup-menu
-    // default_popup: "popup.html",
+    default_popup: "popup.html",
   },
   options_page: "options.html",
   background: {

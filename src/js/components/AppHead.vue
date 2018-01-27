@@ -14,7 +14,7 @@
       <div class="collapse navbar-collapse" id="header-navbar">
         <ul class="navbar-nav mr-auto">
           <router-link active-class="active" tag="li" class="nav-item" to="/bookmarks.html">
-            <a class="nav-link">Home</a>
+            <a class="nav-link">Bookmarks</a>
           </router-link>
           <router-link active-class="active" tag="li" class="nav-item" to="/options.html">
             <a class="nav-link">Settings</a>
