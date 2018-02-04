@@ -4,6 +4,8 @@ module.exports = {
   permissions: [
     "background",
     "bookmarks",
+    "storage",
+    "tabs",
   ],
   optional_permissions: [
     "activeTab",
@@ -13,8 +15,6 @@ module.exports = {
     "nativeMessaging",
     "notifications",
     "platformKeys",
-    "storage",
-    "tabs",
     "unlimitedStorage",
   ],
   chrome_ui_overrides: {

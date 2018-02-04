@@ -1,17 +1,19 @@
 module.exports = {
-  toggle_feature_foo: {
+  open_tabs_window: {
     suggested_key: {
-      default: "Ctrl+Shift+Y",
-      mac: "Command+Shift+Y",
+      windows: "Alt+Space",
+      mac: "Alt+Space",
+      chromeos: "Alt+Space",
+      linux: "Alt+Space",
     },
-    description: "Toggle feature foo",
+    description: "Open tabs window",
   },
   _execute_browser_action: {
     suggested_key: {
-      windows: "Ctrl+Shift+Y",
-      mac: "Command+Shift+Y",
-      chromeos: "Ctrl+Shift+U",
-      linux: "Ctrl+Shift+J",
+      windows: "Alt+Space",
+      mac: "Alt+Space",
+      chromeos: "Alt+Space",
+      linux: "Alt+Space",
     },
   },
   _execute_page_action: {

@@ -1,11 +1,11 @@
 import BM from "./lib/bookmark"
 import storage from "./lib/storage"
+import browser from "./lib/browser"
 import BMAO from "./dao/bookmarks"
+import "./commands"
 
 
 const DELAY = 500
-
-chrome.commands.onCommand.addListener((...args) => console.log('Command:', ...args))
 
 // todo: Enable config sync across devices with `chrome.storage.sync`-api
 // https://developer.chrome.com/extensions/storage#property-sync
@@ -13,7 +13,6 @@ chrome.commands.onCommand.addListener((...args) => console.log('Command:', ...ar
 const state = {
   queue_delayed: [], // if option "create_delay" is true then keep track of which ids and folders will be sorted once option "create_delay_detail" seconds have passed
   delay_timer: '', // used to keep track of one setTimeout call when the option create_delay is enabled and a bookmark onCreate event has happened
-  log: true, // make sure this is false when publishing to the chrome web store
   is_import_active: false, // true if bookmarks are actively being imported
   status: {
     listeners_active: false, // true if maintenance listeners are active
@@ -94,7 +93,7 @@ function sort_buffer(id, parent_id) {
   setTimeout(() => populateSortQueue(id, parent_id), DELAY)
 }
 
-function init({bookmarks, extension}) {
+function init({ bookmarks, extension }) {
   extension.onMessage.addListener(stop_collaborate_and_listen)
 
   bookmarks.onImportBegan.addListener(onImportBegan)
@@ -104,13 +103,13 @@ function init({bookmarks, extension}) {
   runTreeSort()
   // wait a short while before attempting to activate bookmark change listeners
   // so we don't get notified about our own initial sorting activity
-    .then(() => setTimeout(() => attachListeners({bookmarks}), 1e3))
+    .then(() => setTimeout(() => attachListeners({ bookmarks }), 1e3))
     .catch(console.error)
 }
-function attachListeners({bookmarks}) {
+function attachListeners({ bookmarks }) {
   if (state.status.sort_active > 0) {
     // sorting is still active, will try to activate listeners again in DELAY milliseconds
-    setTimeout(() => attachListeners({bookmarks}), DELAY)
+    setTimeout(() => attachListeners({ bookmarks }), DELAY)
   } else {
     // activate listeners so we can keep things organized
     state.status.listeners_active = true
@@ -127,7 +126,7 @@ function attachListeners({bookmarks}) {
 async function runTreeSort(id = 0) {
   return BMAO.getChildren(id)
     .then(bookmarks => bookmarks
-      .forEach(({id}) => populateSortQueue(id, id, 'recurse')))
+      .forEach(({ id }) => populateSortQueue(id, id, 'recurse')))
 }
 function populateSortQueue(id, parent_id = id, recurse = false) {
   parent_id = int(parent_id)
@@ -150,7 +149,7 @@ function populateSortQueue(id, parent_id = id, recurse = false) {
         log('populateSortQueue', parent_id, before, after)
 
         if (before !== after) {
-          const [{parentId}] = childrens
+          const [{ parentId }] = childrens
           // check because in a very specific timing sensitive scenario
           // (usually initiated by resorting everything because an option changed)
           // things can get added twice
@@ -202,9 +201,9 @@ function runReorderQueue(parentId) {
         queued[2] = int(queued[2]) + 1 // increment our position value for next time
 
         if (index !== current.index) {
-          log('runReorderQueue > Moving', ordered.id, {parentId, index})
+          log('runReorderQueue > Moving', ordered.id, { parentId, index })
           BMAO
-            .move(ordered.id, {parentId, index})
+            .move(ordered.id, { parentId, index })
             .catch(console.error)
           break
         }
@@ -270,7 +269,7 @@ function onImportEnded() {
   log('Import finished')
   BMAO.getChildren()
     .then(o => {
-      for (const {id} of o) {
+      for (const { id } of o) {
         sortQueue.push(id)
         populateSortQueue(id, id, 'recurse')
       }
@@ -293,11 +292,11 @@ function stop_collaborate_and_listen(request, sender, sendResponse) {
       state.option = request.option // overwrite our local copy of options with any potentially changed values
       storage.merge('bookmarks_sorting', state.option)
 
-      sendResponse({'message': 'thanks'})
+      sendResponse({ 'message': 'thanks' })
       runTreeSort().catch(console.error)
       break
   }
 }
 
 
-init(window.chrome)
+init(browser)
