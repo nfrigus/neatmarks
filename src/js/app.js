@@ -1,7 +1,13 @@
 import 'bootstrap'
 import App from './components/App.vue'
 import Vue from 'vue'
+import iView from 'iview'
 import router from './router'
+import 'iview/dist/styles/iview.css'
+import '../css/main.scss'
+
+
+Vue.use(iView)
 
 
 $(() => {
@@ -10,6 +16,4 @@ $(() => {
     render: h => h(App),
     router,
   })
-
-  $('[data-bm-id]', document.body).on('dragstart dragend', console.log)
 })

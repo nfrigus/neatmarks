@@ -50,37 +50,39 @@ const scss_loader = ExtractTextPlugin.extract({
     options: { sourceMap },
   }],
 })
-const rules = [
-  {
-    test: /\.js$/,
-    use: ['babel-loader'],
-    exclude: /node_modules/,
-  },
-  {
-    test: /\.vue$/,
+const rules = [{
+  test: /\.js$/,
+  use: ['babel-loader'],
+  exclude: /node_modules/,
+}, {
+  test: /\.vue$/,
+  use: [{
     loader: 'vue-loader',
     options: {
       loaders: {
         js: 'babel-loader',
       },
     },
-  },
-  {
-    test: /\.scss$/,
-    use: scss_loader,
-  },
-  {
-    test: /.(ttf|otf|eot|svg|woff2?)(\?[a-z0-9]+)?$/,
-    use: [{
-      loader: 'file-loader',
-      options: {
-        name: '[name].[ext]',
-        outputPath: '../fonts/',
-        publicPath: '/fonts/',
-      },
-    }],
-  },
-]
+  }, {
+    loader: 'iview-loader',
+    options: {
+      prefix: false,
+    },
+  }],
+}, {
+  test: /\.s?css$/,
+  use: scss_loader,
+}, {
+  test: /.(ttf|otf|eot|svg|woff2?)(\?[a-z0-9]+)?$/,
+  use: [{
+    loader: 'file-loader',
+    options: {
+      name: '[name].[ext]',
+      outputPath: '../fonts/',
+      publicPath: '/fonts/',
+    },
+  }],
+}]
 
 
 module.exports = [{
@@ -95,15 +97,6 @@ module.exports = [{
     sourceMapFilename: '[name].js.map',
   },
   plugins: plugins_js,
-}, {
-  entry: {
-    main: './src/css/main.scss',
-  },
-  output: {
-    filename: '[name].css',
-    path: __dirname + '/dist/css',
-    sourceMapFilename: '[name].css.map',
-  },
 }].map(makeConfig)
 
 
