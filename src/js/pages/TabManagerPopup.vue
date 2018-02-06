@@ -23,6 +23,9 @@
 <style lang="scss">
   .TabList {
     padding: 0 1em;
+    white-space: nowrap;
+    width: 100%;
+
     ul, li {
       list-style: none;
       margin: 0;
@@ -30,10 +33,27 @@
     }
 
     &-Icon {
+      display: inline-block;
       max-height: 1em;
-      max-width: 1em;
+      width: 1em;
     }
-    &-Close { }
+    &-Item {
+      cursor: pointer;
+      display: block;
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+      :hover { text-decoration: underline; }
+    }
+    &-Close {
+      background: #fff;
+      bottom: 0;
+      display: none;
+      position: absolute;
+      right: 0;
+      &:hover { text-shadow: #f00 0 0 10px; }
+    }
+    &-Item:hover &-Close { display: block; }
   }
 </style>
 
