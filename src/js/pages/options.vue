@@ -7,43 +7,40 @@
         <div class="wrapper">
           <h2>Autosorting</h2>
 
-          <form id="options-form">
+          <form @submit.prevent="onSubmit()">
             <div class="form-check">
               <label class="form-check-label">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  data-option="enabled">
+                <Switch v-model="options.enabled" />
                 enable bookmarks autosorting
               </label>
             </div>
             <div class="form-group">
-              <label for="option-autosorting-order">Sorting order</label>
-              <select data-option="order_by" class="form-control" id="option-autosorting-order">
-                <option value="">...</option>
-                <optgroup label="Alpha">
-                  <option value="alpha">A-Z</option>
-                  <option value="alphaReverse">Z-A</option>
-                </optgroup>
-                <optgroup label="Date Added">
-                  <option value="date">Newer - Older</option>
-                  <option value="dateReverse">Older - Newer</option>
-                </optgroup>
-                <optgroup label="URL">
-                  <option value="url">A-Z</option>
-                  <option value="urlReverse">Z-A</option>
-                </optgroup>
-              </select>
+              <label>Sorting order</label>
+              <Select v-model="options.order_by">
+                <Option value="">...</Option>
+                <OptionGroup label="Alpha">
+                  <Option value="alpha">A-Z</Option>
+                  <Option value="alphaReverse">Z-A</Option>
+                </OptionGroup>
+                <OptionGroup label="Date Added">
+                  <Option value="date">Newer - Older</Option>
+                  <Option value="dateReverse">Older - Newer</Option>
+                </OptionGroup>
+                <OptionGroup label="URL">
+                  <Option value="url">A-Z</Option>
+                  <Option value="urlReverse">Z-A</Option>
+                </OptionGroup>
+              </Select>
             </div>
             <div class="form-check">
               <label class="form-check-label">
-                <input type="checkbox" class="form-check-input" data-option="create_delay">
+                <Switch v-model="options.create_delay" />
                 enable sorting delay
               </label>
             </div>
             <div class="form-group">
-              <label for="exampleFormControlInput1">Sorting delay interval</label>
-              <input type="number" class="form-control" id="exampleFormControlInput1" data-option="create_delay_detail">
+              <label>Sorting delay interval</label>
+              <Input type="number" class="form-control" v-model="options.create_delay_detail" />
             </div>
             <button type="submit" class="btn btn-primary">Save</button>
           </form>
@@ -54,12 +51,33 @@
 </template>
 
 <script>
-  import OptionHandler from './options'
+  async function getOptions() {
+    return new Promise(resolve => chrome.extension.sendMessage({ 'request': 'options' }, resolve))
+  }
+  async function setOptions(option) {
+    return new Promise(resolve => chrome.extension.sendMessage({ request: 'options_set', option }, resolve))
+  }
 
 
   export default {
-    mounted() {
-      OptionHandler.init()
+    async mounted() {
+      this.options = await getOptions()
+    },
+    data() {
+      return {
+        options: {
+          create_delay: true,
+          create_delay_detail: 30,
+          enabled: false,
+          order_by: "alpha",
+        },
+      }
+    },
+    methods: {
+      async onSubmit() {
+        await setOptions(this.options)
+        this.$Message.info('Saved.');
+      },
     },
   }
 </script>
