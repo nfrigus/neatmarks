@@ -26,18 +26,18 @@
   </Layout>
 </template>
 <script>
-  /**
-   * todo: make footer stick to bottom
-   **/
   export default {}
 </script>
 <style lang="scss">
+  html, body { height: 100% }
+
   .layout {
-    border: 1px solid #d7dde4;
     background: #f5f7f9;
-    position: relative;
     border-radius: 4px;
+    border: 1px solid #d7dde4;
+    min-height: 100%;
     overflow: hidden;
+    position: relative;
 
     &-header {
       position: fixed;
