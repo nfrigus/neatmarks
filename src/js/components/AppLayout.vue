@@ -1,31 +1,29 @@
 <template>
-  <div class="layout">
-    <Layout>
-      <Header :style="{position: 'fixed', width: '100%'}">
-        <Menu mode="horizontal" theme="dark" active-name="1">
-          <div class="layout-logo"></div>
-          <div class="layout-nav">
-            <MenuItem name="1">
-              <router-link active-class="active" to="/bookmarks.html">
-                <Icon type="ios-keypad"></Icon>
-                Bookmarks
-              </router-link>
-            </MenuItem>
-            <MenuItem name="2">
-              <router-link active-class="active" to="/options.html">
-                <Icon type="ios-analytics"></Icon>
-                Settings
-              </router-link>
-            </MenuItem>
-          </div>
-        </Menu>
-      </Header>
-      <Content class="layout-content">
-        <slot></slot>
-      </Content>
-      <Footer class="layout-footer">2017-{{ new Date().getFullYear() }} &copy; NeatMarks</Footer>
-    </Layout>
-  </div>
+  <Layout class="layout">
+    <Header class="layout-header">
+      <Menu mode="horizontal" theme="dark" active-name="1">
+        <MenuItem name="tabs">
+          <router-link active-class="active" title="Tabs" to="/tabs.html">
+            <Icon type="ios-book"></Icon>
+          </router-link>
+        </MenuItem>
+        <MenuItem name="bookmarks">
+          <router-link active-class="active" title="Bookmarks" to="/bookmarks.html">
+            <Icon type="bookmark"></Icon>
+          </router-link>
+        </MenuItem>
+        <MenuItem name="settings">
+          <router-link active-class="active" title="Settings" to="/options.html">
+            <Icon type="erlenmeyer-flask"></Icon>
+          </router-link>
+        </MenuItem>
+      </Menu>
+    </Header>
+    <Content class="layout-content">
+      <slot></slot>
+    </Content>
+    <Footer class="layout-footer">2017-{{ new Date().getFullYear() }} &copy; NeatMarks</Footer>
+  </Layout>
 </template>
 <script>
   /**
@@ -33,7 +31,7 @@
    **/
   export default {}
 </script>
-<style  lang="scss">
+<style lang="scss">
   .layout {
     border: 1px solid #d7dde4;
     background: #f5f7f9;
@@ -41,9 +39,22 @@
     border-radius: 4px;
     overflow: hidden;
 
+    &-header {
+      position: fixed;
+      width: 100%;
+      .ivu-menu-item {
+        font-size: 1.5em;
+      }
+    }
+
+    &-logo {
+      width: 2em;
+      height: 2em;
+      background: #f00 url("/icons/icon.svg");
+    }
+
     &-nav {
-      margin: 0 20px;
-      width: 420px;
+      font-size: 1.5em;
     }
 
     &-content {
