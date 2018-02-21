@@ -6,12 +6,6 @@ const sourceMap = debug
 
 
 const plugins_js = [
-  new webpack.ProvidePlugin({
-    $: 'jquery',
-    'window.jQuery': 'jquery',
-    jQuery: 'jquery',
-    Popper: ['popper.js', 'default'],
-  }),
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendors',
     minChunks: isVendorModule,

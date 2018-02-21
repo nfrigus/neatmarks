@@ -1,25 +1,22 @@
 <template>
-  <div>
-    <app-head></app-head>
-
+  <layout>
     <router-view></router-view>
-  </div>
+  </layout>
 </template>
 
 <script>
-  import AppHead from './AppHead.vue'
+  import Layout from './AppLayout.vue'
   import 'iview/dist/styles/iview.css'
 
 
   export default {
     components: {
-      AppHead,
+      Layout,
     },
   }
 </script>
 
 <style lang="scss">
   $fa-font-path: "~font-awesome/fonts";
-  @import "~bootstrap/scss/bootstrap";
   @import "~font-awesome/scss/font-awesome.scss";
 </style>

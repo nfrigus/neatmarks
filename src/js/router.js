@@ -12,6 +12,7 @@ const router = new VueRouter({
   mode: 'history',
   base: __dirname,
   routes: [
+    // todo: remove dependency on extra html entry-point-files
     { path: '/bookmarks.html', component: BMPage },
     { path: '/options.html', component: OptionPage },
     { path: '/popup.html', component: () => chrome.tabs.create({ url: '/bookmarks.html' }) },
