@@ -60,6 +60,9 @@
   .BMTree {
     &-root {
       list-style: none;
+      ul {
+        margin-left: 1em;
+      }
     }
     &-time {
       font-size: .8em;
