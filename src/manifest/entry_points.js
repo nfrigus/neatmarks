@@ -5,9 +5,9 @@ module.exports = {
   browser_action: {
     default_icon: icons,
     default_title: "__MSG_extBtnTitle__",
-    default_popup: "popup.html",
+    default_popup: "/app.html#/popup",
   },
-  options_page: "options.html",
+  options_page: "/app.html#/options",
   background: {
     scripts: [
       "js/vendors.js",

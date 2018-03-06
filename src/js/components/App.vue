@@ -10,9 +10,9 @@
 
 
   const keyActions = {
-    [1]() { this.$router.push('/tabs.html') },
-    [2]() { this.$router.push('/bookmarks.html') },
-    [3]() { this.$router.push('/options.html') },
+    [1]() { this.$router.push({ name: 'tabs' }) },
+    [2]() { this.$router.push({ name: 'bookmarks' }) },
+    [3]() { this.$router.push({ name: 'options' }) },
   }
 
   export default {

@@ -9,14 +9,12 @@ Vue.use(VueRouter)
 
 
 const router = new VueRouter({
-  mode: 'history',
   base: __dirname,
   routes: [
-    // todo: remove dependency on extra html entry-point-files
-    { path: '/bookmarks.html', component: BMPage },
-    { path: '/options.html', component: OptionPage },
-    { path: '/popup.html', component: () => chrome.tabs.create({ url: '/bookmarks.html' }) },
-    { path: '/tabs.html', component: TabsPopup },
+    { name: 'bookmarks', path: '/bookmarks', component: BMPage },
+    { name: 'options', path: '/options', component: OptionPage },
+    { name: 'popup', path: '/popup', component: () => chrome.tabs.create({ url: '/app.html#/bookmarks' }) },
+    { name: 'tabs', path: '/tabs', component: TabsPopup },
   ],
 })
 
