@@ -29,7 +29,10 @@
   export default {}
 </script>
 <style lang="scss">
-  html, body { height: 100% }
+  html, body {
+    height: 100%;
+    min-width: 160px;
+  }
 
   .layout {
     background: #f5f7f9;

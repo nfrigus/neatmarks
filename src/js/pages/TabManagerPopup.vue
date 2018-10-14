@@ -1,8 +1,11 @@
 <template>
   <div>
     <ul class="TabList">
-      <li v-for="(window, index) in windows">
-        <h3>Window {{ index + 1 }}</h3>
+      <li v-for="window in windows">
+        <h3 class="TabList-Header">
+          Window #{{ window.id }}
+          <a class="TabList-Close" @click="closeWindow(window.id)">❌</a>
+        </h3>
         <ul>
           <li v-for="tab in window.tabs" class="TabList-Item">
             <img class="TabList-Icon" :src="tab.favIconUrl" />
@@ -37,7 +40,7 @@
       max-height: 1em;
       width: 1em;
     }
-    &-Item {
+    &-Item, &-Header {
       cursor: pointer;
       display: block;
       overflow: hidden;
@@ -51,9 +54,11 @@
       display: none;
       position: absolute;
       right: 0;
+      text-decoration: none;
       &:hover { text-shadow: #f00 0 0 10px; }
     }
-    &-Item:hover &-Close { display: block; }
+    &-Item:hover &-Close,
+    &-Header:hover &-Close { display: block; }
   }
 </style>
 
@@ -64,17 +69,22 @@
     getCurrentWindow,
   } from '../lib/browser/windows'
 
+  const {
+    tabs,
+    windows,
+  } = window.chrome
+
 
   let managerWindowId = null
   let bgWindowId = null
   let pauseManagerClose = false
 
   function handleManagerClose() {
-    return chrome.windows.onFocusChanged.addListener(newWindowId => {
+    return windows.onFocusChanged.addListener(newWindowId => {
       if (![
-          managerWindowId,
-          chrome.windows.WINDOW_ID_NONE,
-        ].includes(newWindowId)
+        managerWindowId,
+        windows.WINDOW_ID_NONE,
+      ].includes(newWindowId)
       ) {
         if (!pauseManagerClose) {
           window.close()
@@ -92,7 +102,7 @@
   async function goToTab(tab, changeWindow = true) {
     if (changeWindow) await focusWindow(tab.windowId)
 
-    await chrome.tabs.update(tab.id, { active: true })
+    await tabs.update(tab.id, { active: true })
   }
 
   async function goToTabInBackground(tab) {
@@ -105,8 +115,7 @@
 
   export default {
     data() {
-      getAllWindows()
-        .then(windows => this.windows = windows)
+      this.loadData()
 
       return {
         query: "",
@@ -117,10 +126,18 @@
       onClick: goToTab,
       onHover: goToTabInBackground,
       closeTab(tab) {
-        chrome.tabs.remove(tab.id)
+        tabs.remove(tab.id)
         this.windows.forEach(window => {
           window.tabs = window.tabs.filter(t => t.id !== tab.id)
         })
+      },
+      closeWindow(id) {
+        windows.remove(id)
+        this.windows = this.windows.filter(w => w.id !== id)
+      },
+      loadData() {
+        getAllWindows()
+          .then(windows => this.windows = windows)
       },
     },
     mounted() {
