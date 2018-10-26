@@ -78,6 +78,8 @@
   let managerWindowId = null
   let bgWindowId = null
   let pauseManagerClose = false
+  const isPopup = window.opener !== null
+
 
   function handleManagerClose() {
     return windows.onFocusChanged.addListener(newWindowId => {
@@ -97,7 +99,8 @@
 
   /**
    * make the tab active in browser, and add class 'active' to the corresponding element in the list and focuses on it
-   * @param {*} tab
+   * @param {number} tab
+   * @param {boolean} changeWindow
    */
   async function goToTab(tab, changeWindow = true) {
     if (changeWindow) await focusWindow(tab.windowId)
@@ -106,6 +109,8 @@
   }
 
   async function goToTabInBackground(tab) {
+    if (!isPopup) return
+
     pauseManagerClose = true
     await goToTab(tab, bgWindowId !== tab.windowId)
 
