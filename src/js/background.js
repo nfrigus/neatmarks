@@ -1,8 +1,16 @@
-import BM from "./lib/bookmark"
-import storage from "./lib/storage"
-import browser from "./lib/browser"
-import BMAO from "./dao/bookmarks"
-import "./commands"
+/* eslint-disable
+     camelcase,
+     consistent-return,
+     no-console,
+     no-param-reassign,
+     no-underscore-dangle,
+     prefer-template
+*/
+import BM from './lib/bookmark'
+import storage from './lib/storage'
+import browser from './lib/browser'
+import BMAO from './dao/bookmarks'
+import './commands'
 
 
 const DELAY = 500
@@ -10,13 +18,26 @@ const DELAY = 500
 // todo: Enable config sync across devices with `chrome.storage.sync`-api
 // https://developer.chrome.com/extensions/storage#property-sync
 // todo: Simplify bookmarks ordering configs
+/**
+ * @param Array queue_delayed
+ *     when option "create_delay" is true
+ *     keep track of which ids and folders will be sorted
+ *     once option "create_delay_detail" seconds have passed
+ * @param delay_timer
+ *     used to keep track of one setTimeout call
+ *     when the option create_delay is enabled
+ *     and a bookmark onCreate event has happened
+ * @param is_import_active true if bookmarks are actively being imported
+ * @param status.listeners_active true if maintenance listeners are active
+ * @param status.sort_active if greater than 0, delay activation of the maintenance listeners
+ */
 const state = {
-  queue_delayed: [], // if option "create_delay" is true then keep track of which ids and folders will be sorted once option "create_delay_detail" seconds have passed
-  delay_timer: '', // used to keep track of one setTimeout call when the option create_delay is enabled and a bookmark onCreate event has happened
-  is_import_active: false, // true if bookmarks are actively being imported
+  queue_delayed: [],
+  delay_timer: '',
+  is_import_active: false,
   status: {
-    listeners_active: false, // true if maintenance listeners are active
-    sort_active: 0      // if greater than 0, delay activation of the maintenance listeners
+    listeners_active: false,
+    sort_active: 0,
   },
   option: storage.get('bookmarks_sorting', {
     enabled: true,
@@ -26,14 +47,16 @@ const state = {
   }),
 }
 
-// keep track of which folder IDs have been queued for sorting
+/**
+ * keep track of which folder IDs have been queued for sorting
+ */
 const sortQueue = {
   _items: [],
   push(id) {
     return this._items.push(id)
   },
   pop(id) {
-    let index = this._items.indexOf(id)
+    const index = this._items.indexOf(id)
     if (index === -1) return
     setTimeout(() => this._items.splice(index, 1), DELAY)
   },
@@ -45,14 +68,16 @@ const sortQueue = {
   },
 }
 
-// keep track of the sort order for a particular folder while it is being processed
+/**
+ * keep track of the sort order for a particular folder while it is being processed
+ */
 const reorderQueue = {
   _items: [],
   has(parent_id) {
-    return this._items.some(queue => queue[0] == parent_id)
+    return this._items.some(queue => +queue[0] === +parent_id)
   },
   pop(item) {
-    let index = this._items.indexOf(item)
+    const index = this._items.indexOf(item)
     if (index === -1) return
     return this._items.splice(index, 1)
   },
@@ -64,7 +89,7 @@ const reorderQueue = {
     ]) // parent id, sorted array, next item to process
   },
   find(parent_id) {
-    return this._items.find(item => item[0] == parent_id)
+    return this._items.find(item => +item[0] === +parent_id)
   },
 }
 
@@ -88,8 +113,11 @@ function sort_buffer(id, parent_id) {
     return log('sort_buffer > Parent Folder already in the queue for sorting.')
   }
 
-  sortQueue.push(parent_id) // add parent_id to the array so we can detect and ignore duplicate requests
-  // Chrome seems to lock the bookmarks for just an instant after a user does something. We have to be polite and wait to organize them.
+  // add parent_id to the array so we can detect and ignore duplicate requests
+  sortQueue.push(parent_id)
+
+  // Chrome seems to lock the bookmarks for just an instant after a user does something.
+  // We have to be polite and wait to organize them.
   setTimeout(() => populateSortQueue(id, parent_id), DELAY)
 }
 
@@ -98,7 +126,7 @@ function init({ bookmarks, extension }) {
 
   bookmarks.onImportBegan.addListener(onImportBegan)
   bookmarks.onImportEnded.addListener(onImportEnded)
-  bookmarks.onMoved.addListener(onMoveSortInfoHandler) // this listener is always active by intention
+  bookmarks.onMoved.addListener(onMoveSortInfoHandler) // always active by intention
 
   runTreeSort()
   // wait a short while before attempting to activate bookmark change listeners
@@ -124,6 +152,7 @@ function attachListeners({ bookmarks }) {
 }
 
 async function runTreeSort(id = 0) {
+  /* eslint-disable no-shadow */
   return BMAO.getChildren(id)
     .then(bookmarks => bookmarks
       .forEach(({ id }) => populateSortQueue(id, id, 'recurse')))
@@ -132,7 +161,7 @@ function populateSortQueue(id, parent_id = id, recurse = false) {
   parent_id = int(parent_id)
 
   BMAO.getChildren(parent_id)
-    .then(childrens => {
+    .then((childrens) => {
       if (recurse) {
         // Recurse folders
         childrens
@@ -162,7 +191,8 @@ function populateSortQueue(id, parent_id = id, recurse = false) {
       }
 
       if (state.status.listeners_active) {
-        // remove folder from the queue but only if the listeners are active (aka we finished the initial import)
+        // remove folder from the queue but only if the listeners are active
+        // aka we finished the initial import
         log('sort > No need to reorder, removing parent folder from \'state.queue_sort\'')
         sortQueue.popAsync(parent_id)
       }
@@ -180,21 +210,20 @@ function runReorderQueue(parentId) {
   state.status.sort_active++
 
   BMAO.getChildren(parentId)
-    .then(children => {
+    .then((children) => {
       const queued = reorderQueue.find(parentId)
       log('runReorderQueue > reorder queue item', queued)
 
       if (!queued) return log('runReorderQueue > missing')
-      let [
-        ,
-        ordered_items,
-        index,
-      ] = queued
+      const ordered_items = queued[1]
 
-      // we only want to move bookmarks we have to in order to minimize the hit against Chrome's quota system
-      // so we will check every item individually and see if its index needs to be updated
-      // why check each item instead of doing it ahead of time? index numbers can shift as bookmarks are reordered
-      for (; index < ordered_items.length; index++) {
+      // we only want to move bookmarks we have to
+      // in order to minimize the hit against Chrome's quota system
+      // so we will check every item individually
+      // and see if its index needs to be updated
+      // why check each item instead of doing it ahead of time?
+      // index numbers can shift as bookmarks are reordered
+      for (let index = queued[2]; index < ordered_items.length; index++) {
         const ordered = ordered_items[index]
         const current = children.find(item => item.id === ordered.id)
 
@@ -209,10 +238,10 @@ function runReorderQueue(parentId) {
         }
       }
 
-      if (queued[2] >= queued[1].length) { // we are done
+      if (queued[2] >= queued[1].length) {
         log('reorder_queue > Removing information from both queues for id ' + parentId)
-        reorderQueue.pop(queued) // remove information from this array since we are done reordering this folder
-        sortQueue.popAsync(parentId) // remove parent id from global array
+        reorderQueue.pop(queued)
+        sortQueue.popAsync(parentId)
       }
     })
     .catch(console.error)
@@ -243,7 +272,7 @@ function onCreatedListener(id, bookmark) {
     state.queue_delayed = []
   }
 }
-function onChangedListener(id, changeInfo) {
+function onChangedListener(id) {
   if (state.is_import_active) return
   log('onChanged > id = ' + id)
   BMAO.get(id)
@@ -256,9 +285,10 @@ function onMovedListener(id, moveInfo) {
 
   sort_buffer(id, moveInfo.parentId)
 }
-function onChildReorderListener(id, reorderInfo) {
+function onChildReorderListener(id) {
   if (state.is_import_active) return
-  // seems like onChildrenReordered only gets called if you use the 'Reorder by Title' function in the Bookmark Manager
+  // seems like onChildrenReordered only gets called
+  // if you use the 'Reorder by Title' function in the Bookmark Manager
   log('onChildrenReordered > id = ' + id)
 }
 function onImportBegan() {
@@ -268,11 +298,11 @@ function onImportBegan() {
 function onImportEnded() {
   log('Import finished')
   BMAO.getChildren()
-    .then(o => {
-      for (const { id } of o) {
+    .then((childrens) => {
+      childrens.forEach(({ id }) => {
         sortQueue.push(id)
         populateSortQueue(id, id, 'recurse')
-      }
+      })
       state.is_import_active = false
     })
     .catch(console.error)
@@ -283,18 +313,19 @@ function onMoveSortInfoHandler(id, moveInfo) {
   runReorderQueue(moveInfo.parentId)
 }
 function stop_collaborate_and_listen(request, sender, sendResponse) {
-  // Ice is back with a brand new function
   switch (request.request) {
     case 'options':
       sendResponse(state.option)
       break
     case 'options_set':
-      state.option = request.option // overwrite our local copy of options with any potentially changed values
+      state.option = request.option
       storage.merge('bookmarks_sorting', state.option)
 
-      sendResponse({ 'message': 'thanks' })
+      sendResponse({ message: 'thanks' })
       runTreeSort().catch(console.error)
       break
+    default:
+      console.error('Unexpected request')
   }
 }
 

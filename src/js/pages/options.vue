@@ -49,11 +49,13 @@
 </template>
 
 <script>
+  const { sendMessage } = window.chrome.extension
+
   async function getOptions() {
-    return new Promise(resolve => chrome.extension.sendMessage({ 'request': 'options' }, resolve))
+    return new Promise(resolve => sendMessage({ 'request': 'options' }, resolve))
   }
   async function setOptions(option) {
-    return new Promise(resolve => chrome.extension.sendMessage({ request: 'options_set', option }, resolve))
+    return new Promise(resolve => sendMessage({ request: 'options_set', option }, resolve))
   }
 
 

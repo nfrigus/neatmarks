@@ -1,6 +1,8 @@
-const {bookmarks} = window.chrome || {}
+/* eslint-disable no-param-reassign */
+const { bookmarks } = window.chrome || {}
 
 if (!bookmarks) {
+  /* eslint-disable no-console */
   console.warn('Unable to access chrome bookmarks api')
 }
 
@@ -22,25 +24,34 @@ async function move(id, dest) {
 
   return new Promise(resolve => bookmarks.move(id.toString(), dest, resolve))
 }
+
+/**
+ * https://developer.chrome.com/extensions/bookmarks#method-getChildren
+ * @param id
+ * @return BookmarkTreeNode[]
+ */
 async function getChildren(id = 0) {
   return new Promise(resolve => bookmarks.getChildren(id.toString(), resolve))
 }
+
 async function get(ids) {
-  let return_array = true
+  let returnArray = true
   if (!Array.isArray(ids)) {
-    return_array = false
+    returnArray = false
     ids = [ids]
   }
   ids = ids.map(id => id.toString())
 
   return new Promise(resolve => bookmarks.get(
     ids,
-    result => resolve(return_array
-      ? result
-      : result[0],
+    result => resolve(
+      returnArray
+        ? result
+        : result[0],
     ),
   ))
 }
+
 async function getTree() {
-  return new Promise(resolve => chrome.bookmarks.getTree(resolve))
+  return new Promise(resolve => bookmarks.getTree(resolve))
 }

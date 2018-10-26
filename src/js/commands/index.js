@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 import browser from '../lib/browser'
 import open_tabs_window from './open_tabs_window'
 

@@ -1,3 +1,5 @@
+const { chrome } = window
+
 export async function getAllWindows() {
   return new Promise(resolve => chrome.windows
     .getAll({ populate: true, windowTypes: ['normal'] }, resolve))

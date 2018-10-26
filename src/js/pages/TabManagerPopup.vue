@@ -1,13 +1,13 @@
 <template>
   <div>
     <ul class="TabList">
-      <li v-for="window in windows">
+      <li :key="window.id" v-for="window in windows">
         <h3 class="TabList-Header">
           Window #{{ window.id }}
           <a class="TabList-Close" @click="closeWindow(window.id)">❌</a>
         </h3>
         <ul>
-          <li v-for="tab in window.tabs" class="TabList-Item">
+          <li :key="tab.id" v-for="tab in window.tabs" class="TabList-Item">
             <img class="TabList-Icon" :src="tab.favIconUrl" />
             <a
               :title="tab.url"
@@ -69,6 +69,7 @@
     getCurrentWindow,
   } from '../lib/browser/windows'
 
+  const isPopup = window.opener !== null
   const {
     tabs,
     windows,
@@ -78,7 +79,6 @@
   let managerWindowId = null
   let bgWindowId = null
   let pauseManagerClose = false
-  const isPopup = window.opener !== null
 
 
   function handleManagerClose() {
@@ -98,7 +98,10 @@
   }
 
   /**
-   * make the tab active in browser, and add class 'active' to the corresponding element in the list and focuses on it
+   * make the tab active in browser
+   * add class 'active' to the corresponding element in the list
+   * focuses on it
+   *
    * @param {number} tab
    * @param {boolean} changeWindow
    */

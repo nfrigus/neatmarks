@@ -20,8 +20,8 @@ const plugins_js = [
 const plugins = [
   new ExtractTextPlugin("[name].css"),
   new webpack.EnvironmentPlugin({
-    NODE_ENV: 'development',
-    DEBUG: false,
+    NODE_ENV: process.env.NODE_ENV || 'development',
+    DEBUG: debug,
   }),
 ]
 
@@ -45,6 +45,14 @@ const scss_loader = ExtractTextPlugin.extract({
   }],
 })
 const rules = [{
+  enforce: "pre",
+  exclude: /node_modules/,
+  loader: "eslint-loader",
+  test: /\.(js|vue)$/,
+  options: {
+    fix: true,
+  },
+}, {
   test: /\.js$/,
   use: ['babel-loader'],
   exclude: /node_modules/,

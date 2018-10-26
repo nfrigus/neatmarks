@@ -4,7 +4,7 @@ export default {
 }
 
 // Constructors
-function getSorterBy(order_by = '') {
+function getSorterBy(orderBy = '') {
   return function bmSortFunction(a, b) {
     const isFolderA = isFolder(a)
     const isFolderB = isFolder(b)
@@ -13,14 +13,15 @@ function getSorterBy(order_by = '') {
     if (isFolderA && !isFolderB) return -1
     if (!isFolderA && isFolderB) return 1
 
-    let valA, valB
+    let valA
+    let valB
 
     if (isFolderA && isFolderB) {
       // sort by title
       valA = title(a)
       valB = title(b)
     } else {
-      switch (order_by) {
+      switch (orderBy) {
         case 'date':
           valA = date(b)
           valB = date(a)
@@ -36,15 +37,17 @@ function getSorterBy(order_by = '') {
       }
     }
 
-    if (/Reverse$/.test(order_by)) {
+    if (/Reverse$/.test(orderBy)) {
       ([valA, valB] = [valB, valA])
     }
 
     if (valA < valB) return -1
     if (valA > valB) return 1
 
-    // there is a case when two items have the same name they will trade places every sort
-    // to combat this we'll get more and more specific so there will never be a 0 sort order returned
+    // there is a case when two items have the same name
+    // they will trade places every sort
+    // to combat this we'll get more and more specific
+    // so there will never be a 0 sort order returned
 
     // sort on case
     if (a.title < b.title) return -1
@@ -72,7 +75,7 @@ function title(o) {
   return o.title.toLowerCase()
 }
 function date(o) {
-  return typeof(o.dateAdded) === 'number' ? o.dateAdded : 0
+  return typeof o.dateAdded === 'number' ? o.dateAdded : 0
 }
 function url(o) {
   let value = o.url
@@ -81,7 +84,7 @@ function url(o) {
     value = ''
   } else {
     value = o.url.toLowerCase()
-    value = value.replace('http://', '').replace('https://', '').replace('ftp://', '').replace('chrome://', '').replace('www.', '')
+    value = value.replace(/^(:\/\/|www.)/, '')
   }
 
   return value

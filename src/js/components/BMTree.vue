@@ -1,6 +1,6 @@
 <template>
   <ul class="BMTree-root">
-    <li v-for="node in entries" :class="{
+    <li :key="node.id" v-for="node in entries" :class="{
       'BMTree-node': 1,
       'BMTree-node_collapsed': node.collapsed
     }">
@@ -19,7 +19,9 @@
 
 
   export default {
-    props: ['nodes'],
+    props: {
+      nodes: { type: Object, required: true },
+    },
     data() {
       const entries = this.nodes
 
