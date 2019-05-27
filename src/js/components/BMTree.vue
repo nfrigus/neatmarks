@@ -1,9 +1,9 @@
 <template>
   <ul class="BMTree-root">
-    <li :key="node.id" v-for="node in entries" :class="{
+    <li :key="node.id" v-for="node in nodes" :class="{
       'BMTree-node': 1,
       'BMTree-node_collapsed': node.collapsed
-    }">
+    }" :title="getTitle(node)">
       <div class="BMTree-Item" @click="toggle(node)" draggable="true" :data-bm-id="node.id">
         <i :class="{fa: 1, [getIcon(node)]: 1}" :title="node.id"></i>
         <a :href="node.url" :title="node.url">{{ node.title }}</a>
@@ -24,19 +24,7 @@
 
   export default {
     props: {
-      nodes: { type: Array, default: () => null },
-    },
-    data() {
-      const entries = this.nodes
-
-      if (!entries) {
-        BM.getTree()
-          .then(nodes => this.entries = nodes)
-      }
-
-      return {
-        entries,
-      }
+      nodes: { type: Array, required: true },
     },
     methods: {
       toggle(node) {
@@ -63,6 +51,9 @@
       },
       getDateAdded(node) {
         return new Date(node.dateAdded).toISOString().substr(0, 10)
+      },
+      getTitle(node) {
+        return `ID: ${node.id}`
       },
       async delete(node) {
         await BM.remove(node.id)
