@@ -7,10 +7,12 @@ if (!bookmarks) {
 }
 
 export default {
+  create,
   get,
   getChildren,
   getTree,
   move,
+  remove,
 }
 
 async function move(id, dest) {
@@ -54,4 +56,16 @@ async function get(ids) {
 
 async function getTree() {
   return new Promise(resolve => bookmarks.getTree(resolve))
+}
+
+function remove(id) {
+  return new Promise(resolve => {
+    bookmarks.remove(id, resolve)
+  })
+}
+
+function create(data) {
+  return new Promise(resolve => {
+    bookmarks.create(data, resolve)
+  })
 }

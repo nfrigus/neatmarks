@@ -11,18 +11,12 @@
           <router-link active-class="active" title="Bookmarks" :to="{ name: 'bookmarks' }">
             <Icon type="bookmark"></Icon>
           </router-link>
-
-
         </MenuItem>
-
-
         <MenuItem name="settings">
           <router-link active-class="active" title="Settings" :to="{ name: 'options' }">
             <Icon type="erlenmeyer-flask"></Icon>
           </router-link>
         </MenuItem>
-
-
       </Menu>
     </Header>
     <Content class="layout-content">

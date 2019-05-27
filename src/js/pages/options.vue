@@ -38,7 +38,7 @@
             </div>
             <div class="form-group">
               <label>Sorting delay interval</label>
-              <Input type="number" class="form-control" v-model="options.create_delay_detail" />
+              <Input html-type="number" class="form-control" v-model="options.create_delay_detail" />
             </div>
             <Button html-type="submit" type="primary">Save</Button>
           </form>
