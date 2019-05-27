@@ -36,8 +36,6 @@
 
   .layout {
     background: #f5f7f9;
-    border-radius: 4px;
-    border: 1px solid #d7dde4;
     min-height: 100%;
     overflow: hidden;
     position: relative;
@@ -45,6 +43,7 @@
     &-header {
       position: fixed;
       width: 100%;
+      z-index: 100;
       .ivu-menu-item {
         font-size: 1.5em;
       }
