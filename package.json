@@ -3,7 +3,8 @@
   "version": "0.5.0",
   "description": "",
   "scripts": {
-    "start": "gulp"
+    "start": "gulp",
+    "test": "mocha -r test/setup"
   },
   "keywords": [],
   "author": "",
@@ -38,11 +39,15 @@
     "gulp-copy": "^1.1.0",
     "gulp-run": "^1.7.1",
     "iview-loader": "^1.2.2",
+    "mocha": "^6.2.0",
     "natives": "^1.1.6",
     "node-sass": "^4.5.3",
     "postcss-loader": "^2.1.6",
     "precss": "^2.0.0",
+    "puppeteer": "^1.19.0",
     "sass-loader": "^6.0.7",
+    "should": "^13.2.3",
+    "sinon-chrome": "^3.0.1",
     "svg2png": "^4.1.1",
     "vue-loader": "^13.7.3",
     "vue-template-compiler": "^2.5.17",
