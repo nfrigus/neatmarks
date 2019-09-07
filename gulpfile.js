@@ -1,10 +1,13 @@
 const del = require('del')
 const gulp = require('gulp')
 const manifest = require('./src/manifest')
+const mocha = require('gulp-mocha')
 const Run = require('gulp-run')
 const svg2png = require('svg2png')
-const {promisify} = require('util')
-const {readFileSync, writeFile} = require('fs')
+const { promisify } = require('util')
+const { readFileSync, writeFile } = require('fs')
+
+const { env } = process
 
 
 gulp.task('clean', () => del([
@@ -14,7 +17,7 @@ gulp.task('clean', () => del([
 gulp.task('assets', () => gulp.src([
     'src/*.html',
     'src/{_locales,icons}/**/*',
-  ], {base: 'src'})
+  ], { base: 'src' })
   .pipe(gulp.dest('dist')))
 gulp.task('icon', ['assets'], () => convertSvg2Pngs({
   dest: 'dist/icons/{size}.png',
@@ -32,9 +35,19 @@ gulp.task('crx', [
 gulp.task('build', ['crx'])
 gulp.task('build:clean', ['clean'], () => gulp.start('build'))
 gulp.task('build:prod', () => {
-  process.env.NODE_ENV = 'production'
+  env.NODE_ENV = 'production'
   return gulp.start('build:clean')
 })
+gulp.task('test', () => {
+  env.NODE_ENV = 'test'
+
+  gulp.src('{server,test}/**/*.spec.js', { read: false })
+    .pipe(mocha({
+      reporter: env.MOCHA_REPORTER || 'nyan',
+      require: ['test/setup'],
+    }))
+})
+
 
 gulp.task('default', ['build:clean'])
 
@@ -47,7 +60,7 @@ async function convertSvg2Pngs({
   src = readFileSync(src)
 
   return Promise.all(sizes.map(size =>
-    svg2png(src, {width: size, height: size})
+    svg2png(src, { width: size, height: size })
       .then(buffer => write(dest.replace('{size}', size), buffer))))
 }
 

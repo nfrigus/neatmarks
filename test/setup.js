@@ -3,4 +3,6 @@ global.chrome = require('sinon-chrome')
 
 try {
   require('./setup.local')
-} catch (e) {}
+} catch (error) {
+  console.warn(error)
+}
