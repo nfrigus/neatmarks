@@ -4,6 +4,10 @@ const browser = require('./browser')
 describe('browser', function () {
   this.timeout(1e6)
   before(browser.init)
+  afterEach(async () => {
+    const page = await browser.getPage()
+    return await page.assertNoConsoleErrors()
+  })
 
   describe('keyboard tabs navigation', () => {
     before(() => browser.navigate('options'))

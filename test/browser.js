@@ -46,11 +46,24 @@ async function close() {
 }
 
 function patchPage(page) {
+  let log = []
+
   Object.assign(page, {
     assertExists: assertExists.bind(page),
+    assertNoConsoleErrors: assertNoConsoleErrors.bind(page),
   })
 
+  page.on('console', msg => log.push(msg))
+
   return page
+
+  function assertNoConsoleErrors() {
+    const errors = log.filter(msg => msg.type() === 'error')
+
+    if (errors.length) {
+      throw errors[0].text()
+    }
+  }
 }
 
 async function assertExists(selector) {
