@@ -17,9 +17,7 @@ async function getPage(index = 0) {
   if (!pages[index]) {
     const browser = await getBrowser()
     const page = await browser.newPage()
-    pages[index] = page
-
-    page.assertExists = assertExists.bind(page)
+    pages[index] = patchPage(page)
   }
 
   return pages[index]
@@ -28,6 +26,7 @@ async function getPage(index = 0) {
 async function getBrowser() {
   if (!browser) {
     browser = await puppeteer.launch()
+    pages.push(...(await browser.pages()).map(patchPage))
   }
 
   return browser
@@ -44,6 +43,14 @@ async function close() {
     browser.close()
     browser = null
   }
+}
+
+function patchPage(page) {
+  Object.assign(page, {
+    assertExists: assertExists.bind(page),
+  })
+
+  return page
 }
 
 async function assertExists(selector) {
