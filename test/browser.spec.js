@@ -1,28 +1,12 @@
-const puppeteer = require('puppeteer')
-
-
-puppeteer
-  .defaultArgs({
-    headless: false,
-  })
+const browser = require('./browser')
 
 
 describe('browser', function () {
-  let browser
-
   this.timeout(1e6)
-  before(async () => {
-    browser = await puppeteer.launch()
-  })
+  before(browser.init)
 
   describe('keyboard tabs navigation', () => {
-    let page
-
-    before(async () => {
-      page = await browser.newPage()
-      await page.goto('chrome-extension://jcagcimhnijkdeapbckfleadlfehkgle/app.html#/options')
-    })
-    after(() => browser.close())
+    before(() => browser.navigate('options'))
 
     ;[
       ['open tabs', '1', '.TabList'],
@@ -30,12 +14,11 @@ describe('browser', function () {
       ['open settings', '3', 'form'],
     ].map(([action, key, selector]) =>
       it(`${action} with ${key} key`, async () => {
+        const page = await browser.getPage()
         await page.keyboard.press(key)
-        await assertExists(page, selector)
+        await page.assertExists(selector)
       }))
   })
-})
 
-async function assertExists(page, selector) {
-  should.exist(await page.$(selector), `Selector "${selector}" should be present`)
-}
+  after(browser.close)
+})
