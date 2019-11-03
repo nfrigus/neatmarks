@@ -42,7 +42,7 @@ const state = {
   option: storage.get('bookmarks_sorting', {
     enabled: true,
     order_by: 'alpha', // alpha | alphaReverse | date | dateReverse | url | urlReverse
-    create_delay: 1,
+    create_delay: true,
     create_delay_detail: 45,
   }),
 }
