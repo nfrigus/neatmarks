@@ -5,7 +5,12 @@ const debug = process.env.NODE_ENV !== 'production'
 const sourceMap = debug
 
 
-const plugins_js = [
+const plugins = [
+  new ExtractTextPlugin("[name].css"),
+  new webpack.EnvironmentPlugin({
+    NODE_ENV: process.env.NODE_ENV || 'development',
+    DEBUG: debug,
+  }),
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendors',
     minChunks: isVendorModule,
@@ -15,13 +20,6 @@ const plugins_js = [
     parallel: true,
     sourceMap,
     test: /\.js$/,
-  }),
-]
-const plugins = [
-  new ExtractTextPlugin("[name].css"),
-  new webpack.EnvironmentPlugin({
-    NODE_ENV: process.env.NODE_ENV || 'development',
-    DEBUG: debug,
   }),
 ]
 
@@ -98,7 +96,6 @@ module.exports = [{
     path: __dirname + '/dist/js',
     sourceMapFilename: '[name].js.map',
   },
-  plugins: plugins_js,
 }].map(makeConfig)
 
 
@@ -109,9 +106,9 @@ function isVendorModule({ context }) {
 }
 function makeConfig(extend) {
   const config = {
-    devtool: 'source-map',
-    plugins,
+    devtool: debug ? 'inline-source-map' : false,
     module: { rules },
+    plugins,
   }
   Object.keys(extend).forEach(key => {
     if (Array.isArray(config[key])) {
