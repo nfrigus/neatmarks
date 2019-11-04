@@ -20,12 +20,11 @@ const DELAY = 500
 // todo: Simplify bookmarks ordering configs
 /**
  * @param Array queue_delayed
- *     when option "create_delay" is true
+ *     when "orderDelay" is above 0
  *     keep track of which ids and folders will be sorted
- *     once option "create_delay_detail" seconds have passed
+ *     once option "orderDelay" seconds have passed
  * @param delay_timer
  *     used to keep track of one setTimeout call
- *     when the option create_delay is enabled
  *     and a bookmark onCreate event has happened
  * @param is_import_active true if bookmarks are actively being imported
  * @param status.listeners_active true if maintenance listeners are active
@@ -39,11 +38,9 @@ const state = {
     listeners_active: false,
     sort_active: 0,
   },
-  option: storage.get('bookmarks_sorting', {
-    enabled: true,
-    order_by: 'alpha', // alpha | alphaReverse | date | dateReverse | url | urlReverse
-    create_delay: true,
-    create_delay_detail: 45,
+  option: storage.get('bookmarks.order', {
+    orderBy: 'none', // none | alpha | alphaReverse | date | dateReverse | url | urlReverse
+    orderDelay: 45,
   }),
 }
 
@@ -169,10 +166,10 @@ function populateSortQueue(id, parent_id = id, recurse = false) {
           .forEach(bm => populateSortQueue(bm.id, bm.id, recurse))
       }
 
-      if (state.option.enabled && childrens.length > 1) {
+      if (state.option.orderBy && state.option.orderBy !== 'none' && childrens.length > 1) {
         // we have a non-empty folder with more than 1 item so sort it
         const before = hashIndexes(childrens)
-        childrens.sort(BM.getSorterBy(state.option.order_by))
+        childrens.sort(BM.getSorterBy(state.option.orderBy))
         const after = hashIndexes(childrens)
 
         log('populateSortQueue', parent_id, before, after)
@@ -254,10 +251,10 @@ function onCreatedListener(id, bookmark) {
   if (state.is_import_active) return
   log('onCreated > id = ' + id)
 
-  if (state.option.create_delay) {
+  if (state.option.orderDelay) {
     clearTimeout(state.delay_timer)
     state.queue_delayed.push([id, bookmark.parentId])
-    state.delay_timer = setTimeout(delay_sort, state.option.create_delay_detail * 1e3)
+    state.delay_timer = setTimeout(delay_sort, state.option.orderDelay * 1e3)
   } else {
     sort_buffer(id, bookmark.parentId)
   }
@@ -314,14 +311,14 @@ function onMoveSortInfoHandler(id, moveInfo) {
 }
 function stop_collaborate_and_listen(request, sender, sendResponse) {
   switch (request.request) {
-    case 'options':
+    case 'options.get':
       sendResponse(state.option)
       break
-    case 'options_set':
+    case 'options.set':
       state.option = request.option
-      storage.merge('bookmarks_sorting', state.option)
+      storage.merge('bookmarks.order', state.option)
 
-      sendResponse({ message: 'thanks' })
+      sendResponse({ message: 'saved' })
       runTreeSort().catch(console.error)
       break
     default:
