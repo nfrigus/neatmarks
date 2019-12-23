@@ -10,20 +10,20 @@
 
 
   const keyActions = {
-    [1]() { this.$router.push({ name: 'tabs' }) },
-    [2]() { this.$router.push({ name: 'bookmarks' }) },
-    [3]() { this.$router.push({ name: 'options' }) },
+    1() { this.$router.push({ name: 'tabs' }) },
+    2() { this.$router.push({ name: 'bookmarks' }) },
+    3() { this.$router.push({ name: 'options' }) },
   }
 
   export default {
+    components: {
+      Layout,
+    },
     mounted() {
       document.addEventListener('keyup', event => {
         const keyAction = keyActions[event.key]
         if (keyAction) keyAction.call(this)
       })
-    },
-    components: {
-      Layout,
     },
   }
 </script>

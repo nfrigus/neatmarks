@@ -14,16 +14,16 @@
 
 
   export default {
+    components: {
+      BmTree,
+    },
     data() {
       BM.getTree()
-        .then(nodes => this.nodes = nodes[0].children )
+        .then(nodes => this.nodes = nodes[0].children)
 
       return {
         nodes: [],
       }
-    },
-    components: {
-      BmTree,
     },
   }
 </script>

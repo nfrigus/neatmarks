@@ -14,16 +14,17 @@
     "babel-runtime": "^6.26.0",
     "font-awesome": "^4.7.0",
     "iview": "^2.14.3",
+    "mini-css-extract-plugin": "^0.9.0",
     "mosi": "^1.6.0",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.2.6",
-    "babel-core": "^6.22.1",
-    "babel-loader": "^6.2.10",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
     "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.1.8",
+    "babel-preset-env": "^1.7.0",
     "chrome-webstore-upload-cli": "^1.2.0",
     "cross-env": "^5.2.0",
     "crx": "^3.2.1",
@@ -34,8 +35,7 @@
     "eslint-loader": "^2.1.1",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-vue": "^4.7.1",
-    "extract-text-webpack-plugin": "^3.0.2",
-    "file-loader": "^0.10.1",
+    "file-loader": "^5.0.2",
     "gulp": "^3.9.1",
     "gulp-copy": "^1.1.0",
     "gulp-mocha": "^7.0.1",
@@ -51,9 +51,10 @@
     "should": "^13.2.3",
     "sinon-chrome": "^3.0.1",
     "svg2png": "^4.1.1",
-    "vue-loader": "^13.7.3",
+    "vue-loader": "^15.8.3",
     "vue-template-compiler": "^2.5.17",
-    "webpack": "^3.12.0",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10",
     "webpack-stream": "^4.0.3"
   }
 }

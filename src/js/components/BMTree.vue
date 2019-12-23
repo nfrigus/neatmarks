@@ -1,15 +1,15 @@
 <template>
   <ul class="BMTree-root">
-    <li :key="node.id" v-for="node in nodes" :class="{
+    <li v-for="node in nodes" :key="node.id" :class="{
       'BMTree-node': 1,
       'BMTree-node_collapsed': node.collapsed
     }" :title="getTitle(node)">
-      <div class="BMTree-Item" @click="toggle(node)" draggable="true" :data-bm-id="node.id">
+      <div :data-bm-id="node.id" class="BMTree-Item" draggable="true" @click="toggle(node)">
         <i :class="{fa: 1, [getIcon(node)]: 1}" :title="node.id"></i>
         <a :href="node.url" :title="node.url">{{ node.title }}</a>
         <time class="BMTree-time">{{ getDateAdded(node) }}</time>
         <div class="BMTree-ActionBox">
-          <a class="BMTree-ActionBtn" @click="onTrashBtnClick(node)" v-if="getType(node) !== 'folder'">
+          <a v-if="!isFolder(node)" class="BMTree-ActionBtn" @click="onTrashBtnClick(node)">
             <i :class="{fa: 1, [getTrashIcon(node)]: 1}"></i>
           </a>
         </div>
@@ -23,6 +23,7 @@
   import BM from '../dao/bookmarks'
 
   export default {
+    name: 'BmTree',
     props: {
       nodes: { type: Array, required: true },
     },
@@ -45,6 +46,9 @@
       },
       getType(node) {
         return node.url ? 'link' : 'folder'
+      },
+      isFolder(node) {
+        return this.getType(node) === 'folder'
       },
       getTrashIcon(node) {
         return node.isDeleted ? 'fa-reply' : 'fa-trash'
@@ -79,7 +83,6 @@
         }
       },
     },
-    name: 'bm-tree',
   }
 </script>
 

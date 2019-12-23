@@ -1,19 +1,19 @@
 <template>
   <div>
     <ul class="TabList">
-      <li :key="window.id" v-for="window in windows">
+      <li v-for="window in windows" :key="window.id">
         <h3 class="TabList-Header">
           Window #{{ window.id }}
           <a class="TabList-Close" @click="closeWindow(window.id)">❌</a>
         </h3>
         <ul>
-          <li :key="tab.id" v-for="tab in window.tabs" class="TabList-Item">
-            <img class="TabList-Icon" :src="tab.favIconUrl" />
+          <li v-for="tab in window.tabs" :key="tab.id" class="TabList-Item">
+            <img :src="tab.favIconUrl" class="TabList-Icon" />
             <a
               :title="tab.url"
+              class="TabList-Title"
               @click="onClick(tab)"
               @mouseover="onHover(tab)"
-              class="TabList-Title"
             >{{ tab.title }}</a>
             <a class="TabList-Close" @click="closeTab(tab)">❌</a>
           </li>
@@ -126,9 +126,14 @@
       this.loadData()
 
       return {
-        query: "",
+        query: '',
         windows: [],
       }
+    },
+    mounted() {
+      getCurrentWindow()
+        .then(window => managerWindowId = window.id)
+        .then(handleManagerClose)
     },
     methods: {
       onClick: goToTab,
@@ -147,11 +152,6 @@
         getAllWindows()
           .then(windows => this.windows = windows)
       },
-    },
-    mounted() {
-      getCurrentWindow()
-        .then(window => managerWindowId = window.id)
-        .then(handleManagerClose)
     },
   }
 </script>

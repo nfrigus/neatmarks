@@ -3,17 +3,17 @@
     <Header class="layout-header">
       <Menu mode="horizontal" theme="dark" active-name="1">
         <MenuItem name="tabs">
-          <router-link active-class="active" title="Tabs" :to="{ name: 'tabs' }">
+          <router-link :to="{ name: 'tabs' }" active-class="active" title="Tabs">
             <Icon type="ios-book"></Icon>
           </router-link>
         </MenuItem>
         <MenuItem name="bookmarks">
-          <router-link active-class="active" title="Bookmarks" :to="{ name: 'bookmarks' }">
+          <router-link :to="{ name: 'bookmarks' }" active-class="active" title="Bookmarks">
             <Icon type="bookmark"></Icon>
           </router-link>
         </MenuItem>
         <MenuItem name="settings">
-          <router-link active-class="active" title="Settings" :to="{ name: 'options' }">
+          <router-link :to="{ name: 'options' }" active-class="active" title="Settings">
             <Icon type="erlenmeyer-flask"></Icon>
           </router-link>
         </MenuItem>

@@ -23,10 +23,10 @@
                 </OptionGroup>
               </Select>
             </div>
-            <div class="form-group" v-if="orderBy !== 'none'">
+            <div v-if="orderBy !== 'none'" class="form-group">
               <label>Delay ordering, seconds</label>
-              <Input html-type="number" class="form-control"
-                v-model="orderDelay" name="options.orderDelay" />
+              <Input v-model="orderDelay" html-type="number"
+                class="form-control" name="options.orderDelay" />
             </div>
             <Button html-type="submit" type="primary">Save</Button>
           </form>
@@ -41,14 +41,14 @@
 
 
   export default {
-    async mounted() {
-      await this.load()
-    },
     data() {
       return {
-        orderBy: "none",
+        orderBy: 'none',
         orderDelay: 0,
       }
+    },
+    async mounted() {
+      await this.load()
     },
     methods: {
       async load() {
@@ -60,7 +60,7 @@
           option: {
             orderBy: this.orderBy,
             orderDelay: this.orderDelay,
-          }
+          },
         }, resolve))
       },
       async onSubmit() {

@@ -10,7 +10,6 @@ module.exports = {
   options_page: "/app.html#/options",
   background: {
     scripts: [
-      "js/vendors.js",
       "js/background.js",
     ],
     persistent: false,
@@ -20,7 +19,6 @@ module.exports = {
       matches: ["<all_urls>"],
       js: [
         // todo: extract manifest from vendors
-        "js/vendors.js",
         "js/content_script.js",
       ],
     },

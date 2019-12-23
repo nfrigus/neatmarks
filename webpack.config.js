@@ -1,30 +1,49 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const webpack = require('webpack')
-const ExtractTextPlugin = require("extract-text-webpack-plugin")
 
 const debug = process.env.NODE_ENV !== 'production'
 const sourceMap = debug
 
 
 const plugins = [
-  new ExtractTextPlugin("[name].css"),
+  new MiniCssExtractPlugin(),
+  new VueLoaderPlugin(),
   new webpack.EnvironmentPlugin({
     NODE_ENV: process.env.NODE_ENV || 'development',
     DEBUG: debug,
   }),
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendors',
-    minChunks: isVendorModule,
-  }),
-  new webpack.optimize.UglifyJsPlugin({
-    cache: true,
-    parallel: true,
-    sourceMap,
-    test: /\.js$/,
-  }),
 ]
 
-const scss_loader = ExtractTextPlugin.extract({
+const rules = [{
+  enforce: "pre",
+  exclude: /node_modules/,
+  loader: "eslint-loader",
+  options: { fix: true },
+  test: /\.(js|vue)$/,
+}, {
+  test: /\.js$/,
+  use: ['babel-loader'],
+  exclude: /node_modules/,
+}, {
+  test: /\.vue$/,
   use: [{
+    loader: 'vue-loader',
+    options: {
+      loaders: {
+        js: 'babel-loader',
+      },
+    },
+  }, {
+    loader: 'iview-loader',
+    options: { prefix: false },
+  }],
+}, {
+  test: /\.s?css$/,
+  use: [{
+    loader: MiniCssExtractPlugin.loader,
+    options: { esModule: true },
+  }, {
     loader: 'css-loader',
     options: { sourceMap },
   }, {
@@ -41,42 +60,12 @@ const scss_loader = ExtractTextPlugin.extract({
     loader: 'sass-loader',
     options: { sourceMap },
   }],
-})
-const rules = [{
-  enforce: "pre",
-  exclude: /node_modules/,
-  loader: "eslint-loader",
-  test: /\.(js|vue)$/,
-  options: {
-    fix: true,
-  },
-}, {
-  test: /\.js$/,
-  use: ['babel-loader'],
-  exclude: /node_modules/,
-}, {
-  test: /\.vue$/,
-  use: [{
-    loader: 'vue-loader',
-    options: {
-      loaders: {
-        js: 'babel-loader',
-      },
-    },
-  }, {
-    loader: 'iview-loader',
-    options: {
-      prefix: false,
-    },
-  }],
-}, {
-  test: /\.s?css$/,
-  use: scss_loader,
 }, {
   test: /.(ttf|otf|eot|svg|woff2?)(\?[a-z0-9]+)?$/,
   use: [{
     loader: 'file-loader',
     options: {
+      esModule: false,
       name: '[name].[ext]',
       outputPath: '../fonts/',
       publicPath: '/fonts/',
@@ -96,17 +85,16 @@ module.exports = [{
     path: __dirname + '/dist/js',
     sourceMapFilename: '[name].js.map',
   },
+  resolve: {
+    extensions: ['.js', '.vue', '.json'],
+  },
 }].map(makeConfig)
 
 
-function isVendorModule({ context }) {
-  return typeof context === 'string'
-    ? /\/node_modules\/.*\.js$/.test(context)
-    : false
-}
 function makeConfig(extend) {
   const config = {
     devtool: debug ? 'inline-source-map' : false,
+    mode: debug ? 'development' : 'production',
     module: { rules },
     plugins,
   }
