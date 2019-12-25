@@ -7,7 +7,7 @@
 <script>
   import Layout from './AppLayout.vue'
   import 'iview/dist/styles/iview.css'
-
+  import 'font-awesome/scss/font-awesome.scss'
 
   const keyActions = {
     1() { this.$router.push({ name: 'tabs' }) },
@@ -27,8 +27,3 @@
     },
   }
 </script>
-
-<style lang="scss">
-  $fa-font-path: "~font-awesome/fonts";
-  @import "~font-awesome/scss/font-awesome.scss";
-</style>

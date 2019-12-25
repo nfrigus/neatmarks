@@ -6,15 +6,6 @@ const debug = process.env.NODE_ENV !== 'production'
 const sourceMap = debug
 
 
-const plugins = [
-  new MiniCssExtractPlugin(),
-  new VueLoaderPlugin(),
-  new webpack.EnvironmentPlugin({
-    NODE_ENV: process.env.NODE_ENV || 'development',
-    DEBUG: debug,
-  }),
-]
-
 const rules = [{
   enforce: "pre",
   exclude: /node_modules/,
@@ -67,14 +58,13 @@ const rules = [{
     options: {
       esModule: false,
       name: '[name].[ext]',
-      outputPath: '../fonts/',
-      publicPath: '/fonts/',
+      outputPath: 'fonts/',
     },
   }],
 }]
 
 
-module.exports = [{
+module.exports = {
   entry: {
     app: './src/js/app.js',
     background: './src/js/background.js',
@@ -85,25 +75,16 @@ module.exports = [{
     path: __dirname + '/dist/js',
     sourceMapFilename: '[name].js.map',
   },
-  resolve: {
-    extensions: ['.js', '.vue', '.json'],
-  },
-}].map(makeConfig)
-
-
-function makeConfig(extend) {
-  const config = {
-    devtool: debug ? 'inline-source-map' : false,
-    mode: debug ? 'development' : 'production',
-    module: { rules },
-    plugins,
-  }
-  Object.keys(extend).forEach(key => {
-    if (Array.isArray(config[key])) {
-      config[key] = config[key].concat(extend[key])
-    } else {
-      config[key] = extend[key]
-    }
-  })
-  return config
+  devtool: debug ? 'inline-source-map' : false,
+  mode: debug ? 'development' : 'production',
+  module: { rules },
+  plugins: [
+    new MiniCssExtractPlugin(),
+    new VueLoaderPlugin(),
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: process.env.NODE_ENV || 'development',
+      DEBUG: debug,
+    }),
+  ],
+  resolve: { extensions: ['.js', '.vue', '.json'] },
 }
