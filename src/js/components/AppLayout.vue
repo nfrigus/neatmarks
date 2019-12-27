@@ -25,9 +25,7 @@
     <Footer class="layout-footer">2017-{{ new Date().getFullYear() }} &copy; NeatMarks</Footer>
   </Layout>
 </template>
-<script>
-  export default {}
-</script>
+
 <style lang="scss">
   html, body {
     height: 100%;
@@ -44,6 +42,7 @@
       position: fixed;
       width: 100%;
       z-index: 100;
+
       .ivu-menu-item {
         font-size: 1.5em;
       }

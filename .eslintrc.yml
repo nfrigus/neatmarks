@@ -6,6 +6,7 @@ env:
   browser: true
 rules:
   arrow-parens: 0
+  import/no-extraneous-dependencies: ["error", {"devDependencies": ["src/stories/**"]}]
   no-bitwise: 0
   no-extra-semi: 2
   no-param-reassign: 0

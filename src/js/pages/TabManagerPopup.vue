@@ -1,66 +1,12 @@
 <template>
-  <div>
-    <ul class="TabList">
-      <li v-for="window in windows" :key="window.id">
-        <h3 class="TabList-Header">
-          Window #{{ window.id }}
-          <a class="TabList-Close" @click="closeWindow(window.id)">❌</a>
-        </h3>
-        <ul>
-          <li v-for="tab in window.tabs" :key="tab.id" class="TabList-Item">
-            <img :src="tab.favIconUrl" class="TabList-Icon" />
-            <a
-              :title="tab.url"
-              class="TabList-Title"
-              @click="onClick(tab)"
-              @mouseover="onHover(tab)"
-            >{{ tab.title }}</a>
-            <a class="TabList-Close" @click="closeTab(tab)">❌</a>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+  <TabsList
+    :windows="windows"
+    @tab:click="tabClick"
+    @tab:close="tabClose"
+    @tab:hover="tabHover"
+    @window:close="windowClose"
+  />
 </template>
-
-<style lang="scss">
-  .TabList {
-    padding: 0 1em;
-    white-space: nowrap;
-    width: 100%;
-
-    ul, li {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    &-Icon {
-      display: inline-block;
-      max-height: 1em;
-      width: 1em;
-    }
-    &-Item, &-Header {
-      cursor: pointer;
-      display: block;
-      overflow: hidden;
-      position: relative;
-      width: 100%;
-      :hover { text-decoration: underline; }
-    }
-    &-Close {
-      background: #fff;
-      bottom: 0;
-      display: none;
-      position: absolute;
-      right: 0;
-      text-decoration: none;
-      &:hover { text-shadow: #f00 0 0 10px; }
-    }
-    &-Item:hover &-Close,
-    &-Header:hover &-Close { display: block; }
-  }
-</style>
 
 <script>
   import {
@@ -68,6 +14,7 @@
     getAllWindows,
     getCurrentWindow,
   } from '../lib/browser/windows'
+  import TabsList from '../components/TabsList.vue'
 
   const isPopup = window.opener !== null
   const {
@@ -121,12 +68,27 @@
     await focusWindow(managerWindowId)
   }
 
+  function closeTab(tab) {
+    tabs.remove(tab.id)
+    this.windows.forEach(window => {
+      window.tabs = window.tabs.filter(t => t.id !== tab.id)
+    })
+  }
+  function closeWindow(id) {
+    windows.remove(id)
+    this.windows = this.windows.filter(w => w.id !== id)
+  }
+  function loadData() {
+    getAllWindows()
+      .then(windows => this.windows = windows)
+  }
+
   export default {
+    components: { TabsList },
     data() {
       this.loadData()
 
       return {
-        query: '',
         windows: [],
       }
     },
@@ -136,22 +98,11 @@
         .then(handleManagerClose)
     },
     methods: {
-      onClick: goToTab,
-      onHover: goToTabInBackground,
-      closeTab(tab) {
-        tabs.remove(tab.id)
-        this.windows.forEach(window => {
-          window.tabs = window.tabs.filter(t => t.id !== tab.id)
-        })
-      },
-      closeWindow(id) {
-        windows.remove(id)
-        this.windows = this.windows.filter(w => w.id !== id)
-      },
-      loadData() {
-        getAllWindows()
-          .then(windows => this.windows = windows)
-      },
+      loadData,
+      tabClick: tab => goToTab(tab.id),
+      tabClose: closeTab,
+      tabHover: goToTabInBackground,
+      windowClose: closeWindow,
     },
   }
 </script>
