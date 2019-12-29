@@ -13,7 +13,6 @@
     "test": "gulp test"
   },
   "dependencies": {
-    "babel-runtime": "^6.26.0",
     "font-awesome": "^4.7.0",
     "iview": "^2.14.3",
     "mosi": "^1.6.0",
@@ -21,6 +20,9 @@
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/register": "^7.7.7",
     "@storybook/addon-actions": "^5.2.8",
     "@storybook/addon-backgrounds": "^5.2.8",
     "@storybook/addon-console": "^1.2.1",
@@ -29,11 +31,10 @@
     "@storybook/addons": "^5.2.8",
     "@storybook/theming": "^5.2.8",
     "@storybook/vue": "^5.2.8",
+    "@vue/babel-preset-jsx": "^1.1.2",
     "autoprefixer": "^7.2.6",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.7.0",
+    "babel-loader": "^8.0.6",
+    "babel-preset-vue": "^2.0.2",
     "chrome-webstore-upload-cli": "^1.2.0",
     "cross-env": "^5.2.0",
     "crx": "^3.2.1",

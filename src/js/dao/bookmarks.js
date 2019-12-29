@@ -8,7 +8,7 @@ if (!bookmarks) {
   bookmarks.createTree = createTree
 }
 
-module.exports = {
+export default {
   create,
   createTree,
   get,

@@ -1,21 +1,13 @@
 {
-  "plugins": [
-    [
-      "transform-runtime",
-      {
-        "polyfill": false,
-        "regenerator": true
-      }
-    ]
-  ],
   "presets": [
     [
-      "env",
-      {
-        "targets": [
-          "latest chrome"
-        ]
-      }
-    ]
+      "@babel/preset-env", {
+      "targets": {
+        "browsers": ["last 2 chrome versions"]
+      },
+      "useBuiltIns": "usage"
+    }
+    ],
+    "@vue/babel-preset-jsx"
   ]
 }
