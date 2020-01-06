@@ -2,6 +2,9 @@
 import { action } from '@storybook/addon-actions'
 import AppLayout from '../js/components/AppLayout.vue'
 import TabsList from '../js/components/TabsList.vue'
+import BackupsList from '../js/components/BackupsList.vue'
+import { random } from 'lodash'
+import faker from 'faker'
 
 export default { title: 'App' }
 
@@ -25,15 +28,51 @@ export const tabsList = () => ({
     windowClose: action('window.close'),
   },
   data: () => ({
-    windows: [{
-      id: 1,
-      tabs: [
-        { id: 1, favIconUrl: 'https://api.adorable.io/avatars/32/1', title: 'Tab 1' },
-        { id: 2, favIconUrl: 'https://api.adorable.io/avatars/32/2', title: 'Tab 2' },
-        { id: 3, favIconUrl: 'https://api.adorable.io/avatars/32/3', title: 'Tab 3' },
-        { id: 4, favIconUrl: 'https://api.adorable.io/avatars/32/4', title: 'Tab 4' },
-        { id: 5, favIconUrl: 'https://api.adorable.io/avatars/32/5', title: 'Tab 5' },
-      ],
-    }],
+    windows: makeArray(3).map((i) => ({
+      id: i,
+      tabs: makeArray(5).map((j) => ({
+        favIconUrl: `https://api.adorable.io/avatars/32/${i}-${j}`,
+        id: j,
+        title: `Tab ${i}/${j}`,
+      })),
+    })),
   }),
 })
+
+export const backupsList = () => ({
+  components: { BackupsList },
+  template: `<BackupsList
+    :backups="backups"
+    @item:action:delete="del"
+    @item:action:restore="restore"
+    @item:click="click"
+    @item:hover="hover"
+  />`,
+  methods: {
+    click: action('click'),
+    del: action('delete'),
+    hover: action('hover'),
+    restore: action('restore'),
+  },
+  data: () => ({
+    backups: makeArray(10).map(() => ({
+      stats: makeRandomStats(),
+      createdAt: faker.date.past(),
+    })),
+  }),
+})
+
+function makeRandomStats() {
+  const total = random(10 ** random(6))
+  const links = random(total)
+  const folders = total - links
+
+  return {
+    folders,
+    links,
+    total,
+  }
+}
+function makeArray(length) {
+  return Array.from({ length }, (_, i) => i + 1)
+}

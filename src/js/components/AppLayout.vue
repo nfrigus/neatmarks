@@ -12,6 +12,11 @@
             <Icon type="bookmark"></Icon>
           </router-link>
         </MenuItem>
+        <MenuItem name="backup">
+          <router-link :to="{ name: 'backup' }" active-class="active" title="Backups">
+            <Icon type="archive"></Icon>
+          </router-link>
+        </MenuItem>
         <MenuItem name="settings">
           <router-link :to="{ name: 'options' }" active-class="active" title="Settings">
             <Icon type="erlenmeyer-flask"></Icon>

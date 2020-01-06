@@ -16,6 +16,7 @@ export default {
   getTree,
   move,
   remove,
+  removeTree,
 }
 
 async function move(id, dest) {
@@ -66,9 +67,11 @@ async function getTree() {
 }
 
 async function remove(id) {
-  return new Promise(resolve => {
-    bookmarks.remove(id, resolve)
-  })
+  return new Promise(resolve => bookmarks.remove(id, resolve))
+}
+
+async function removeTree(id) {
+  return new Promise(resolve => bookmarks.removeTree(id, resolve))
 }
 
 /**
@@ -86,13 +89,11 @@ async function remove(id) {
  * 3 - "Mobile bookmarks"
  */
 async function create(data) {
-  return new Promise(resolve => {
-    bookmarks.create(data, resolve)
-  })
+  return new Promise(resolve => bookmarks.create(data, resolve))
 }
 
 async function createTree(parentId, data) {
-  isCreateTree(data)
+  assertCreateTree(data)
 
   return _createTree(parentId.toString(), data)
 }
@@ -112,26 +113,32 @@ async function _createTree(parentId, tree) {
   }))
 }
 
-function isCreateTree(tree) {
-  if (!Array.isArray(tree) || !tree.every(isCreateTreeNode)) {
+function assertCreateTree(tree) {
+  if (!Array.isArray(tree)) {
     throw new Error('Invalid argument')
   }
 
-  return true
+  tree.every(assertCreateTreeNode)
 }
-function isCreateTreeNode(node) {
-  return Object.entries(node).every(isCreateTreeEntry)
+function assertCreateTreeNode(node) {
+  return Object.entries(node).every(isCreateTreeAttribute)
 }
-function isCreateTreeEntry([key, value]) {
+function isCreateTreeAttribute([key, value]) {
   const validate = {
-    children: v => isCreateTree(v),
+    children: v => assertCreateTree(v) || true,
     index: v => typeof v === 'number',
     parentId: isString,
     title: isString,
     url: isString,
   }[key]
 
-  return validate && validate(value)
+  if (!validate) {
+    throw new Error(`Unexpected attribute ${key}`)
+  }
+
+  if (!validate(value)) {
+    throw new Error(`Unexpected value "${value}" for attribute ${key}`)
+  }
 }
 function isString(v) {
   return typeof v === 'string'

@@ -74,9 +74,9 @@
       window.tabs = window.tabs.filter(t => t.id !== tab.id)
     })
   }
-  function closeWindow(id) {
-    windows.remove(id)
-    this.windows = this.windows.filter(w => w.id !== id)
+  function closeWindow(window) {
+    windows.remove(window.id)
+    this.windows = this.windows.filter(w => w.id !== window.id)
   }
   function loadData() {
     getAllWindows()
