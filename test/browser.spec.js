@@ -78,7 +78,8 @@ describe('browser', function () {
     ;[
       ['open tabs', '1', '.TabList'],
       ['open bookmarks', '2', '.BMTree-root'],
-      ['open settings', '3', 'form'],
+      ['open backups', '3', '.BackupsList'],
+      ['open settings', '4', 'form'],
     ].map(([action, key, selector]) =>
       it(`${action} with ${key} key`, async () => {
         const page = await browser.getPage()
