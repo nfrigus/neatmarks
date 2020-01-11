@@ -1,10 +1,10 @@
-/*eslint-disable*/
 import { action } from '@storybook/addon-actions'
+import { random } from 'lodash'
+import faker from 'faker'
 import AppLayout from '../js/components/AppLayout.vue'
 import TabsList from '../js/components/TabsList.vue'
 import BackupsList from '../js/components/BackupsList.vue'
-import { random } from 'lodash'
-import faker from 'faker'
+
 
 export default { title: 'App' }
 

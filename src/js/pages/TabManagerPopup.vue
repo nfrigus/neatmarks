@@ -99,7 +99,7 @@
     },
     methods: {
       loadData,
-      tabClick: tab => goToTab(tab.id),
+      tabClick: goToTab,
       tabClose: closeTab,
       tabHover: goToTabInBackground,
       windowClose: closeWindow,

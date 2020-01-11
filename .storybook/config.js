@@ -7,9 +7,11 @@ import Vue from 'vue'
 import IView from 'iview'
 import 'iview/dist/styles/iview.css'
 import 'font-awesome/scss/font-awesome.scss'
+import { UiPlugin } from '../src/ui'
 
 
 Vue.use(IView)
+Vue.use(UiPlugin)
 Vue.component('router-link', {
   template: '<a @click="onClick"><slot></slot></a>',
   methods: {

@@ -3,22 +3,22 @@
     <Header class="layout-header">
       <Menu mode="horizontal" theme="dark" active-name="1">
         <MenuItem name="tabs">
-          <router-link :to="{ name: 'tabs' }" active-class="active" title="Tabs">
+          <router-link v-key="1" :to="{ name: 'tabs' }" active-class="active" title="Tabs">
             <Icon type="ios-book"></Icon>
           </router-link>
         </MenuItem>
         <MenuItem name="bookmarks">
-          <router-link :to="{ name: 'bookmarks' }" active-class="active" title="Bookmarks">
+          <router-link v-key="2" :to="{ name: 'bookmarks' }" active-class="active" title="Bookmarks">
             <Icon type="bookmark"></Icon>
           </router-link>
         </MenuItem>
         <MenuItem name="backup">
-          <router-link :to="{ name: 'backup' }" active-class="active" title="Backups">
+          <router-link v-key="3" :to="{ name: 'backup' }" active-class="active" title="Backups">
             <Icon type="archive"></Icon>
           </router-link>
         </MenuItem>
         <MenuItem name="settings">
-          <router-link :to="{ name: 'options' }" active-class="active" title="Settings">
+          <router-link v-key="4" :to="{ name: 'options' }" active-class="active" title="Settings">
             <Icon type="erlenmeyer-flask"></Icon>
           </router-link>
         </MenuItem>
