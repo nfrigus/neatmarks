@@ -14,7 +14,6 @@
     getAllWindows,
     getCurrentWindow,
   } from '../lib/browser/windows'
-  import TabsList from '../components/TabsList.vue'
 
   const isPopup = window.opener !== null
   const {
@@ -84,7 +83,6 @@
   }
 
   export default {
-    components: { TabsList },
     data() {
       this.loadData()
 

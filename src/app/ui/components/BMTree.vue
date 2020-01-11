@@ -20,7 +20,8 @@
 </template>
 
 <script>
-  import BM from '../dao/bookmarks'
+  // todo: Segregate dao access
+  import BM from '../../dao/bookmarks'
 
   export default {
     name: 'BmTree',

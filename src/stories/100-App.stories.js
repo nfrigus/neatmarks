@@ -1,19 +1,15 @@
 import { action } from '@storybook/addon-actions'
 import { random } from 'lodash'
 import faker from 'faker'
-import AppLayout from '../js/components/AppLayout.vue'
-import TabsList from '../js/components/TabsList.vue'
-import BackupsList from '../js/components/BackupsList.vue'
 
 
 export default { title: 'App' }
 
+
 export const layout = () => ({
-  components: { AppLayout },
   template: '<AppLayout/>',
 })
 export const tabsList = () => ({
-  components: { TabsList },
   template: `<TabsList
     :windows="windows"
     @tab:click="tabClick"
@@ -38,9 +34,7 @@ export const tabsList = () => ({
     })),
   }),
 })
-
 export const backupsList = () => ({
-  components: { BackupsList },
   template: `<BackupsList
     :backups="backups"
     @item:action:delete="del"

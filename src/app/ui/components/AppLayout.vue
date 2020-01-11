@@ -4,22 +4,22 @@
       <Menu mode="horizontal" theme="dark" active-name="1">
         <MenuItem name="tabs">
           <router-link v-key="1" :to="{ name: 'tabs' }" active-class="active" title="Tabs">
-            <Icon type="ios-book"></Icon>
+            <Icon>book</Icon>
           </router-link>
         </MenuItem>
         <MenuItem name="bookmarks">
           <router-link v-key="2" :to="{ name: 'bookmarks' }" active-class="active" title="Bookmarks">
-            <Icon type="bookmark"></Icon>
+            <Icon>bookmark</Icon>
           </router-link>
         </MenuItem>
         <MenuItem name="backup">
           <router-link v-key="3" :to="{ name: 'backup' }" active-class="active" title="Backups">
-            <Icon type="archive"></Icon>
+            <Icon>archive</Icon>
           </router-link>
         </MenuItem>
         <MenuItem name="settings">
           <router-link v-key="4" :to="{ name: 'options' }" active-class="active" title="Settings">
-            <Icon type="erlenmeyer-flask"></Icon>
+            <Icon>cog</Icon>
           </router-link>
         </MenuItem>
       </Menu>

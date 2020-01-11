@@ -10,7 +10,6 @@
 </template>
 
 <script>
-  import BackupsList from '../components/BackupsList.vue'
   import {
  createBackup, getBackups, iterateBookmarks, removeBackup,
 } from '../lib/persistance'
@@ -26,7 +25,6 @@
   }
 
   export default {
-    components: { BackupsList },
     data() {
       return {
         backups: [],

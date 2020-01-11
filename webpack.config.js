@@ -66,9 +66,9 @@ const rules = [{
 
 module.exports = {
   entry: {
-    app: './src/js/app.js',
-    background: './src/js/background.js',
-    content_script: './src/js/content_script.js',
+    app: './src/app/app.js',
+    background: './src/app/background.js',
+    content_script: './src/app/content_script.js',
   },
   output: {
     filename: '[name].js',

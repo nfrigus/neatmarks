@@ -4,13 +4,9 @@ import { addParameters, configure } from '@storybook/vue'
 import { themes } from '@storybook/theming'
 
 import Vue from 'vue'
-import IView from 'iview'
-import 'iview/dist/styles/iview.css'
-import 'font-awesome/scss/font-awesome.scss'
-import { UiPlugin } from '../src/ui'
+import { UiPlugin } from '../src/app/ui'
 
 
-Vue.use(IView)
 Vue.use(UiPlugin)
 Vue.component('router-link', {
   template: '<a @click="onClick"><slot></slot></a>',
