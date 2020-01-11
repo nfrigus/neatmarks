@@ -10,9 +10,7 @@
 </template>
 
 <script>
-  import {
- createBackup, getBackups, iterateBookmarks, removeBackup,
-} from '../lib/persistance'
+  import { createBackup, getBackups, iterateBookmarks, removeBackup, } from '../lib/persistance'
   import BM from '../dao/bookmarks'
 
   async function clearBookmarks() {
@@ -46,6 +44,7 @@
         await this.refreshBackups()
       },
       async restore(backup) {
+        await createBackup()
         await clearBookmarks()
 
         const data = prepateCreateData(backup.data)

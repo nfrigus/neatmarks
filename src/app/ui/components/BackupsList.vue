@@ -29,14 +29,9 @@
 </template>
 
 <script>
-  function action(type, item) {
-    this.$emit(`item:action:${type}`, item)
-  }
-  function hover(item) {
-    this.$emit('item:hover', item)
-  }
-  function click(item) {
-    this.$emit('item:click', item)
+  const confirmMessages = {
+    delete: 'Are you sure you want to remove backup?',
+    restore: 'This action will create backup and replace all existing bookmarks. Proceed?',
   }
 
   export default {
@@ -50,6 +45,20 @@
       getTime(date) { return date.toISOString().slice(11, 19) },
       hover,
     },
+  }
+
+  function action(type, item) {
+    const confirmMessage = confirmMessages[type]
+
+    if (confirmMessage && !window.confirm(confirmMessage)) return;
+
+    this.$emit(`item:action:${type}`, item)
+  }
+  function hover(item) {
+    this.$emit('item:hover', item)
+  }
+  function click(item) {
+    this.$emit('item:click', item)
   }
 </script>
 

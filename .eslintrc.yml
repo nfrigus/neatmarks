@@ -8,6 +8,7 @@ rules:
   arrow-parens: 0
   import/no-extraneous-dependencies: ["error", {"devDependencies": ["src/stories/**"]}]
   max-len: ["error", { "code": 120 }]
+  no-alert: 0
   no-bitwise: 0
   no-extra-semi: 2
   no-mixed-operators: 0
