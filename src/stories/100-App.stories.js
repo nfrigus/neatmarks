@@ -37,12 +37,15 @@ export const tabsList = () => ({
 export const backupsList = () => ({
   template: `<BackupsList
     :backups="backups"
+    :stats="stats"
+    @item:action:backup="backup"
     @item:action:delete="del"
     @item:action:restore="restore"
     @item:click="click"
     @item:hover="hover"
   />`,
   methods: {
+    backup: action('backup'),
     click: action('click'),
     del: action('delete'),
     hover: action('hover'),
@@ -53,6 +56,7 @@ export const backupsList = () => ({
       stats: makeRandomStats(),
       createdAt: faker.date.past(),
     })),
+    stats: makeRandomStats(),
   }),
 })
 

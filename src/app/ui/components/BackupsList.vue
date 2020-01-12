@@ -1,31 +1,43 @@
 <template>
-  <ul class="BackupsList">
-    <li
-      v-for="(backup, index) in backups"
-      :key="index"
-      class="BackupsList-Row"
-      @click.prevent="click(backup)"
-      @mouseover="hover(backup)"
-    >
-      <div>{{ index + 1 }}</div>
+  <div class="BackupsList">
+    <div class="BackupsList-Header">
       <div>
-        {{ getDate(backup.createdAt) }}
-        <br />
-        {{ getTime(backup.createdAt) }}
+        <BMStats :stats="stats" />
       </div>
       <div>
-        <BMStats :stats="backup.stats" />
-      </div>
-      <div class="BackupsList-Actions">
-        <a @click.stop="action('restore', backup)">
-          <Icon>share-square</Icon>
-        </a>
-        <a @click.stop="action('delete', backup)">
-          <Icon>trash</Icon>
+        <a @click="action('backup')">
+          <Icon>save</Icon>
         </a>
       </div>
-    </li>
-  </ul>
+    </div>
+    <ul class="BackupsList-Table">
+      <li
+        v-for="(backup, index) in backups"
+        :key="index"
+        class="BackupsList-Row"
+        @click.prevent="click(backup)"
+        @mouseover="hover(backup)"
+      >
+        <div>{{ index + 1 }}</div>
+        <div>
+          {{ getDate(backup.createdAt) }}
+          <br />
+          {{ getTime(backup.createdAt) }}
+        </div>
+        <div>
+          <BMStats :stats="backup.stats" />
+        </div>
+        <div class="BackupsList-Actions">
+          <a @click.stop="action('restore', backup)">
+            <Icon>share-square</Icon>
+          </a>
+          <a @click.stop="action('delete', backup)">
+            <Icon>trash</Icon>
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -37,6 +49,7 @@
   export default {
     props: {
       backups: { required: true, type: Array },
+      stats: { required: true, type: Object },
     },
     methods: {
       action,
@@ -64,9 +77,25 @@
 
 <style lang="scss">
   .BackupsList {
-    border-spacing: 0 1px;
-    display: table;
-    text-align: center;
+    &-Header {
+      display: table;
+      border-spacing: 1em;
+
+      > div {
+        display: table-cell;
+        vertical-align: middle;
+      }
+
+      a {
+        font-size: 2em;
+      }
+    }
+
+    &-Table {
+      border-spacing: 0 1px;
+      display: table;
+      text-align: center;
+    }
 
     &-Row {
       display: table-row;

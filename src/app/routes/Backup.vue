@@ -1,16 +1,15 @@
 <template>
-  <div>
-    <a @click="createBackup">Create backup</a>
-    <BackupsList
-      :backups="backups"
-      @item:action:delete="remove"
-      @item:action:restore="restore"
-    />
-  </div>
+  <BackupsList
+    :backups="backups"
+    :stats="stats"
+    @item:action:backup="createBackup"
+    @item:action:delete="remove"
+    @item:action:restore="restore"
+  />
 </template>
 
 <script>
-  import { createBackup, getBackups, iterateBookmarks, removeBackup, } from '../lib/persistance'
+  import { createBackup, getBackups, getCurrentBMStats, iterateBookmarks, removeBackup } from '../lib/persistance'
   import BM from '../dao/bookmarks'
 
   async function clearBookmarks() {
@@ -26,22 +25,24 @@
     data() {
       return {
         backups: [],
+        stats: {},
       }
     },
     async mounted() {
-      await this.refreshBackups()
+      await this.refreshData()
     },
     methods: {
       async createBackup() {
         await createBackup()
-        await this.refreshBackups()
+        await this.refreshData()
       },
-      async refreshBackups() {
+      async refreshData() {
+        this.stats = await getCurrentBMStats()
         this.backups = await getBackups()
       },
       async remove(backup) {
         await removeBackup(backup.id)
-        await this.refreshBackups()
+        await this.refreshData()
       },
       async restore(backup) {
         await createBackup()
@@ -55,7 +56,7 @@
           [3, data[0].children[2].children],
         ].map(([parentId, data]) => BM.createTree(parentId, data)))
 
-        await this.refreshBackups()
+        await this.refreshData()
       },
     },
   }

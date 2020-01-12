@@ -5,6 +5,9 @@ import Store from './IndexedDB'
 const db = new Store()
 
 
+export async function getCurrentBMStats() {
+  return getTreeStats(await BM.getTree())
+}
 export async function createBackup() {
   const data = await BM.getTree()
 

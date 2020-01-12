@@ -45,7 +45,6 @@
     text-align: right;
 
     $b: 2px;
-    $br: 4px;
 
     > * {
       padding-right: 3px;
@@ -54,9 +53,8 @@
 
     &-folders {
       border-color: #0090ff;
-      border-radius: $br 0 0 $br;
       border-style: groove;
-      border-width: $b 0 $b $b;
+      border-width: $b 0;
     }
 
     &-links {
@@ -67,9 +65,8 @@
 
     &-total {
       border-color: #00f;
-      border-radius: 0 $br $br 0;
       border-style: groove;
-      border-width: $b $b $b 0;
+      border-width: $b 0;
     }
   }
 </style>
