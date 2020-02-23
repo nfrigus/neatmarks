@@ -1,17 +1,22 @@
 require('should')
 const puppeteer = require('puppeteer')
+const AppClient = require('./AppClient')
 
 const pages = []
-let browser
+let browser, app
 
 
 module.exports = {
   assertExists,
+  click,
   close,
+  get app() { return app },
+  get page() { return pages[0] },
   getPage,
   init: async () => { await getBrowser() },
   navigate,
 }
+
 
 async function getPage(index = 0) {
   if (!pages[index]) {
@@ -27,6 +32,9 @@ async function getBrowser() {
   if (!browser) {
     browser = await puppeteer.launch()
     pages.push(...(await browser.pages()).map(patchPage))
+
+    await navigate('options')
+    app = new AppClient(pages[0]);
   }
 
   return browser
@@ -36,6 +44,12 @@ async function navigate(path, page) {
   const _page = page || await getPage()
 
   await _page.goto(`chrome-extension://jcagcimhnijkdeapbckfleadlfehkgle/app.html#/${path}`)
+}
+
+async function click(selector, page) {
+  const _page = page || await getPage()
+
+  await _page.click(selector)
 }
 
 async function close() {
@@ -54,6 +68,7 @@ function patchPage(page) {
   })
 
   page.on('console', msg => log.push(msg))
+  page.on('dialog', dialog => Object.assign(page, { dialog }))
 
   return page
 

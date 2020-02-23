@@ -1,9 +1,11 @@
-import BM from '../dao/bookmarks'
+import BM, { iterateBookmarks } from '../dao/bookmarks'
 import Store from './IndexedDB'
 
 
 const db = new Store()
 
+
+export { iterateBookmarks }
 
 export async function getCurrentBMStats() {
   return getTreeStats(await BM.getTree())
@@ -40,18 +42,4 @@ function getTreeStats(tree) {
   stats.total = stats.links + stats.folders
 
   return stats
-}
-
-export function iterateBookmarks(tree, iterator) {
-  const queue = new Set(tree)
-
-  while (queue.size) {
-    queue.forEach(bm => {
-      iterator(bm)
-      queue.delete(bm)
-      if (bm.children && bm.children.length) {
-        bm.children.forEach(queue.add, queue)
-      }
-    })
-  }
 }

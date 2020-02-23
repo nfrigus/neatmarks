@@ -16,7 +16,9 @@ export default {
   getTree,
   move,
   remove,
+  removeAll,
   removeTree,
+  setBookmarks,
 }
 
 async function move(id, dest) {
@@ -66,12 +68,43 @@ async function getTree() {
   return new Promise(resolve => bookmarks.getTree(resolve))
 }
 
+async function setBookmarks(data) {
+  const _data = prepateCreateData(data)
+  await removeAll()
+
+  const restorable = [
+    [1, _data[0].children[0].children],
+    [2, _data[0].children[1].children],
+  ]
+
+  if (_data[0].children[2]) {
+    restorable.push([3, _data[0].children[2].children])
+  }
+
+  await Promise.all(restorable.map(([parentId, data]) => createTree(parentId, data)))
+}
+
 async function remove(id) {
   return new Promise(resolve => bookmarks.remove(id, resolve))
 }
 
 async function removeTree(id) {
   return new Promise(resolve => bookmarks.removeTree(id, resolve))
+}
+
+async function removeAll() {
+  const current = await getTree()
+
+  const removable = [
+    ...current[0].children[0].children, // Bookmarks bar
+    ...current[0].children[1].children, // Other bookmarks
+  ]
+
+  if (current[0].children[2]) {
+    removable.push(...current[0].children[2].children) // Mobile bookmarks
+  }
+
+  await Promise.all(removable.map(bm => removeTree(bm.id)))
 }
 
 /**
@@ -142,4 +175,43 @@ function isCreateTreeAttribute([key, value]) {
 }
 function isString(v) {
   return typeof v === 'string'
+}
+
+
+function prepateCreateData(data) {
+  const prepared = clone(data)
+
+  const allowedAttrs = [
+    'children',
+    'index',
+    'title',
+    'url',
+  ]
+
+  iterateBookmarks(prepared, bm => {
+    Object.keys(bm)
+      .filter(key => !allowedAttrs.includes(key))
+      .forEach(key => {
+        delete bm[key]
+      })
+  })
+
+  return prepared
+}
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj))
+}
+
+export function iterateBookmarks(tree, iterator) {
+  const queue = new Set(tree)
+
+  while (queue.size) {
+    queue.forEach(bm => {
+      iterator(bm)
+      queue.delete(bm)
+      if (bm.children && bm.children.length) {
+        bm.children.forEach(queue.add, queue)
+      }
+    })
+  }
 }

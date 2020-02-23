@@ -1,0 +1,283 @@
+{
+  "empty": [
+    {
+      "title": "",
+      "children": [
+        {
+          "title": "Bookmarks bar",
+          "children": []
+        },
+        {
+          "title": "Other bookmarks",
+          "children": []
+        }
+      ]
+    }
+  ],
+  "sorting": {
+    "base": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [],
+                "parentId": "1",
+                "title": "Folder"
+              },
+              {
+                "parentId": "1",
+                "title": "Link C",
+                "url": "http://b/"
+              },
+              {
+                "parentId": "1",
+                "title": "Link B",
+                "url": "http://a/"
+              },
+              {
+                "parentId": "1",
+                "title": "Link A",
+                "url": "http://c/"
+              }
+            ],
+            "parentId": "0",
+            "title": "Bookmarks bar"
+          },
+          {
+            "children": [],
+            "parentId": "0",
+            "title": "Other bookmarks"
+          }
+        ]
+      }
+    ],
+    "expect": {
+      "alpha": ["Folder", "Link A", "Link B", "Link C"],
+      "alphaReverse": ["Folder", "Link C", "Link B", "Link A"],
+      "url": ["Folder", "Link B", "Link C", "Link A"],
+      "urlReverse": ["Folder", "Link C", "Link B", "Link A"]
+    }
+  },
+  "backup": {
+    "base": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "title": "Link A",
+                    "url": "https://link/a"
+                  },
+                  {
+                    "title": "Link B",
+                    "url": "https://link/b"
+                  }
+                ],
+                "title": "Folder A"
+              }, {
+                "children": [
+                  {
+                    "title": "Link C",
+                    "url": "https://link/c"
+                  },
+                  {
+                    "title": "Link D",
+                    "url": "https://link/d"
+                  }
+                ],
+                "title": "Folder B"
+              },
+              {
+                "title": "Link E",
+                "url": "https://link/E"
+              },
+              {
+                "title": "Link F",
+                "url": "https://link/F"
+              }
+            ],
+            "title": "Bookmarks bar"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "title": "Link G",
+                    "url": "https://link/g"
+                  },
+                  {
+                    "title": "Link H",
+                    "url": "https://link/H"
+                  }
+                ],
+                "title": "Folder C"
+              }, {
+                "children": [
+                  {
+                    "title": "Link I",
+                    "url": "https://link/i"
+                  },
+                  {
+                    "title": "Link J",
+                    "url": "https://link/j"
+                  }
+                ],
+                "title": "Folder D"
+              },
+              {
+                "title": "Link K",
+                "url": "https://link/k"
+              },
+              {
+                "title": "Link L",
+                "url": "https://link/l"
+              }
+            ],
+            "title": "Other bookmarks"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "title": "Link M",
+                    "url": "https://link/m"
+                  },
+                  {
+                    "title": "Link N",
+                    "url": "https://link/n"
+                  }
+                ],
+                "title": "Folder E"
+              }, {
+                "children": [
+                  {
+                    "title": "Link O",
+                    "url": "https://link/o"
+                  },
+                  {
+                    "title": "Link P",
+                    "url": "https://link/P"
+                  }
+                ],
+                "title": "Folder F"
+              },
+              {
+                "title": "Link Q",
+                "url": "https://link/q"
+              },
+              {
+                "title": "Link R",
+                "url": "https://link/r"
+              }
+            ],
+            "title": "Mobile bookmarks"
+          }
+        ],
+        "title": ""
+      }
+    ],
+    "no-mobile": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "title": "Link A",
+                    "url": "https://link/a"
+                  },
+                  {
+                    "title": "Link B",
+                    "url": "https://link/b"
+                  }
+                ],
+                "title": "Folder A"
+              }, {
+                "children": [
+                  {
+                    "title": "Link C",
+                    "url": "https://link/c"
+                  },
+                  {
+                    "title": "Link D",
+                    "url": "https://link/d"
+                  }
+                ],
+                "title": "Folder B"
+              },
+              {
+                "title": "Link E",
+                "url": "https://link/E"
+              },
+              {
+                "title": "Link F",
+                "url": "https://link/F"
+              }
+            ],
+            "title": "Bookmarks bar"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "title": "Link G",
+                    "url": "https://link/g"
+                  },
+                  {
+                    "title": "Link H",
+                    "url": "https://link/H"
+                  }
+                ],
+                "title": "Folder C"
+              }, {
+                "children": [
+                  {
+                    "title": "Link I",
+                    "url": "https://link/i"
+                  },
+                  {
+                    "title": "Link J",
+                    "url": "https://link/j"
+                  }
+                ],
+                "title": "Folder D"
+              },
+              {
+                "title": "Link K",
+                "url": "https://link/k"
+              },
+              {
+                "title": "Link L",
+                "url": "https://link/l"
+              }
+            ],
+            "title": "Other bookmarks"
+          }
+        ],
+        "title": ""
+      }
+    ],
+    "empty": [
+      {
+        "title": "",
+        "children": [
+          {
+            "title": "Bookmarks bar",
+            "children": []
+          },
+          {
+            "title": "Other bookmarks",
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+}
