@@ -1,10 +1,7 @@
-const {
-  before,
-  describe,
-  it,
-} = require('mocha')
+const { before, describe, it } = global
 const browser = require('../browser')
 const DATA = require('../data/bookmarks.json')
+
 
 describe('backups', () => {
   before(() => browser.navigate('backup'))

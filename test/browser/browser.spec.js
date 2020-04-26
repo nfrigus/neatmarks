@@ -3,8 +3,7 @@ const {
   afterEach,
   before,
   describe,
-  it,
-} = require('mocha')
+} = global
 const browser = require('./browser')
 
 
