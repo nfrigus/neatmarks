@@ -1,8 +1,14 @@
 <template>
   <div :title="title" class="BMStats">
-    <div class="BMStats-folders">{{ format(stats.folders) }}</div>
-    <div class="BMStats-links">{{ format(stats.links) }}</div>
-    <div class="BMStats-total">{{ format(stats.total) }}</div>
+    <div class="BMStats-folders">
+      {{ format(stats.folders) }}
+    </div>
+    <div class="BMStats-links">
+      {{ format(stats.links) }}
+    </div>
+    <div class="BMStats-total">
+      {{ format(stats.total) }}
+    </div>
   </div>
 </template>
 

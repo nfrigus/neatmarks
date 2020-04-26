@@ -27,7 +27,9 @@
     <Content class="layout-content">
       <slot></slot>
     </Content>
-    <Footer class="layout-footer">2017-{{ new Date().getFullYear() }} &copy; NeatMarks</Footer>
+    <Footer class="layout-footer">
+      2017-{{ new Date().getFullYear() }} &copy; NeatMarks
+    </Footer>
   </Layout>
 </template>
 

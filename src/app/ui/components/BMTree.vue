@@ -1,9 +1,11 @@
 <template>
   <ul class="BMTree-root">
-    <li v-for="node in nodes" :key="node.id" :class="{
-      'BMTree-node': 1,
-      'BMTree-node_collapsed': node.collapsed
-    }" :title="getTitle(node)">
+    <li
+      v-for="node in nodes"
+      :key="node.id"
+      :class="getClassList(node)"
+      :title="getTitle(node)"
+    >
       <div :data-bm-id="node.id" class="BMTree-Item" draggable="true" @click="toggle(node)">
         <i :class="{fa: 1, [getIcon(node)]: 1}" :title="node.id"></i>
         <a :href="node.url" :title="node.url">{{ node.title }}</a>
@@ -59,6 +61,12 @@
       },
       getTitle(node) {
         return `ID: ${node.id}`
+      },
+      getClassList(node) {
+        return {
+          'BMTree-node': 1,
+          'BMTree-node_collapsed': node.collapsed,
+        }
       },
       async delete(node) {
         await BM.remove(node.id)

@@ -133,7 +133,7 @@ async function createTree(parentId, data) {
 
 async function _createTree(parentId, tree) {
   return Promise.all(tree.map(async node => {
-    const _node = Object.assign({ parentId }, node)
+    const _node = { parentId, ...node }
     delete _node.children
 
     const newNode = await create(_node)

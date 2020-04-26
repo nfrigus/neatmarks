@@ -8,27 +8,44 @@
             <div class="form-group">
               <label>Order by</label>
               <Select v-model="orderBy" name="options.orderBy">
-                <Option value="none" style="font-style: italic">disable</Option>
+                <Option value="none" style="font-style: italic">
+                  disable
+                </Option>
                 <OptionGroup label="Title">
-                  <Option value="alpha">A > Z</Option>
-                  <Option value="alphaReverse">Z > A</Option>
+                  <Option value="alpha">
+                    A > Z
+                  </Option>
+                  <Option value="alphaReverse">
+                    Z > A
+                  </Option>
                 </OptionGroup>
                 <OptionGroup label="Date Added">
-                  <Option value="date">Newer > Older</Option>
-                  <Option value="dateReverse">Older > Newer</Option>
+                  <Option value="date">
+                    Newer > Older
+                  </Option>
+                  <Option value="dateReverse">
+                    Older > Newer
+                  </Option>
                 </OptionGroup>
                 <OptionGroup label="URL">
-                  <Option value="url">A > Z</Option>
-                  <Option value="urlReverse">Z > A</Option>
+                  <Option value="url">
+                    A > Z
+                  </Option>
+                  <Option value="urlReverse">
+                    Z > A
+                  </Option>
                 </OptionGroup>
               </Select>
             </div>
             <div v-if="orderBy !== 'none'" class="form-group">
               <label>Delay ordering, seconds</label>
               <Input v-model="orderDelay" html-type="number"
-                class="form-control" name="options.orderDelay" />
+                class="form-control" name="options.orderDelay"
+              />
             </div>
-            <Button html-type="submit" type="primary">Save</Button>
+            <Button html-type="submit" type="primary">
+              Save
+            </Button>
           </form>
         </div>
       </main>
