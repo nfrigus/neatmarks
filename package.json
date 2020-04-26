@@ -47,7 +47,7 @@
     "eslint-plugin-vue": "^4.7.1",
     "faker": "^4.1.0",
     "file-loader": "^5.0.2",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-copy": "^1.1.0",
     "gulp-mocha": "^7.0.1",
     "gulp-run": "^1.7.1",

@@ -1,61 +1,56 @@
 const del = require('del')
-const gulp = require('gulp')
 const manifest = require('./src/manifest')
 const mocha = require('gulp-mocha')
 const Run = require('gulp-run')
 const svg2png = require('svg2png')
+const { dest, parallel, series, src } = require('gulp')
 const { promisify } = require('util')
 const { readFileSync, writeFile } = require('fs')
 
 const { env } = process
 
+const pack = run('crx pack -o dist/dist.crx dist')
+const webpack = run('webpack')
 
-gulp.task('clean', () => del([
-  'dist/**/*',
-  '!dist/key.pem',
-]))
-gulp.task('assets', () => gulp.src([
+const assetsTasks = [buildLogo, buildStatic, buildManifest]
+const buildTasks = [parallel(...assetsTasks, webpack), pack]
+
+const build = series(buildTasks)
+const buildClean = series(clean, ...buildTasks)
+const buildProd = series(setProductionEnv, clean, ...buildTasks)
+
+module.exports = {
+  'build:assets': parallel(...assetsTasks),
+  'build:clean': buildClean,
+  'build:manifest': buildManifest,
+  'build:prod': buildProd,
+  'build:webpack': webpack,
+  build,
+  clean,
+  default: buildClean,
+  pack,
+  test,
+}
+
+
+function buildStatic() {
+  return src([
     'src/*.html',
     'src/{_locales,icons}/**/*',
   ], { base: 'src' })
-  .pipe(gulp.dest('dist')))
-gulp.task('icon', ['assets'], () => convertSvg2Pngs({
-  dest: 'dist/icons/{size}.png',
-  sizes: [16, 32, 48, 64, 128],
-  src: 'src/icons/icon.svg',
-}))
-gulp.task('manifest', ['assets'], () => manifest.write('dist'))
-gulp.task('webpack', run('webpack'))
-gulp.task('crx', [
-  'assets',
-  'icon',
-  'manifest',
-  'webpack',
-], run('crx pack -o dist/dist.crx dist'))
-gulp.task('build', ['crx'])
-gulp.task('build:clean', ['clean'], () => gulp.start('build'))
-gulp.task('build:prod', () => {
-  env.NODE_ENV = 'production'
-  return gulp.start('build:clean')
-})
-gulp.task('test', () => {
-  env.NODE_ENV = 'test'
-
-  gulp.src('{server,test}/**/*.spec.js', { read: false })
-    .pipe(mocha({
-      reporter: env.MOCHA_REPORTER || 'nyan',
-      require: ['test/setup'],
-    }))
-})
-
-
-gulp.task('default', ['build:clean'])
-
-async function convertSvg2Pngs({
-  src,
-  sizes,
-  dest,
-}) {
+    .pipe(dest('dist'))
+}
+function buildLogo() {
+  return convertSvg2Pngs({
+    dest: 'dist/icons/{size}.png',
+    sizes: [16, 32, 48, 64, 128],
+    src: 'src/icons/icon.svg',
+  })
+}
+function buildManifest() {
+  return manifest.write('dist')
+}
+async function convertSvg2Pngs({ src, sizes, dest }) {
   const write = promisify(writeFile)
   src = readFileSync(src)
 
@@ -64,6 +59,27 @@ async function convertSvg2Pngs({
       .then(buffer => write(dest.replace('{size}', size), buffer))))
 }
 
+async function test() {
+  await setNodeEnv('test')
+
+  return src('{server,test}/**/*.spec.js', { read: false })
+    .pipe(mocha({
+      reporter: env.MOCHA_REPORTER || 'nyan',
+      require: ['test/setup'],
+    }))
+}
+
+function clean() {
+  return del([
+    'dist/**/*',
+    '!dist/key.pem',
+  ])
+}
 function run(command) {
-  return () => Run(command).exec()
+  const name = command.split(' ').shift()
+  return { [name]: () => Run(command).exec() }[name]
+}
+function setProductionEnv() { return setNodeEnv('production') }
+async function setNodeEnv(value) {
+  env.NODE_ENV = value
 }
