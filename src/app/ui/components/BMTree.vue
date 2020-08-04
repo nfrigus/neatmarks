@@ -16,15 +16,17 @@
           </a>
         </div>
       </div>
-      <bm-tree v-if="node.children" :nodes="node.children"></bm-tree>
+      <bm-tree
+        v-if="node.children"
+        :nodes="node.children"
+        @bookmark:remove="remove"
+        @bookmark:restore="restore"
+      ></bm-tree>
     </li>
   </ul>
 </template>
 
 <script>
-  // todo: Segregate dao access
-  import BM from '../../dao/bookmarks'
-
   export default {
     name: 'BmTree',
     props: {
@@ -68,27 +70,19 @@
           'BMTree-node_collapsed': node.collapsed,
         }
       },
-      async delete(node) {
-        await BM.remove(node.id)
-        node.isDeleted = true
-        this.$forceUpdate()
+      async remove(payload) {
+        const _payload = payload.$el ? payload : { $el: this, node: payload }
+        this.$emit('bookmark:remove', _payload)
       },
-      async restore(node) {
-        const restored = await BM.create({
-          parentId: node.parentId,
-          title: node.title,
-          url: node.url,
-        })
-
-        Object.assign(node, restored)
-        node.isDeleted = false
-        this.$forceUpdate()
+      async restore(payload) {
+        const _payload = payload.$el ? payload : { $el: this, node: payload }
+        this.$emit('bookmark:restore', _payload)
       },
       onTrashBtnClick(node) {
         if (node.isDeleted) {
           this.restore(node)
         } else {
-          this.delete(node)
+          this.remove(node)
         }
       },
     },
