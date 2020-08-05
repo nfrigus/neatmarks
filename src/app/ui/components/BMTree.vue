@@ -49,6 +49,9 @@
             throw new Error()
         }
       },
+      getIconLink(node) {
+        return `chrome://favicon2/?size=16&page_url=${encodeURI(node.url)}`
+      },
       getType(node) {
         return node.url ? 'link' : 'folder'
       },
@@ -140,7 +143,10 @@
 
     &-ActionBtn {
       color: #000;
-      filter: invert(1);
+
+      &:hover {
+        color: red;
+      }
     }
   }
 </style>

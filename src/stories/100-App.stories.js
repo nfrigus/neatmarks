@@ -45,7 +45,15 @@ export const backups = () => ({
   data: mockBackupsData,
 })
 export const bookmarks = () => ({
-  template: '<BMTree :nodes="nodes"/>',
+  template: `<BMTree
+    :nodes="nodes"
+    @bookmark:remove="remove"
+    @bookmark:restore="restore"
+  />`,
+  methods: {
+    remove: action('remove'),
+    restore: action('restore'),
+  },
   data: () => ({
     nodes: range(30).map(() => mockBMNode(1)).sort(foldersFirst),
   }),
