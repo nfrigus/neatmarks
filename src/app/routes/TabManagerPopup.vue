@@ -13,7 +13,7 @@
     focusWindow,
     getAllWindows,
     getCurrentWindow,
-  } from '../lib/browser/windows'
+  } from '../browser/windows'
 
   const isPopup = window.opener !== null
   const {

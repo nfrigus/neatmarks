@@ -1,6 +1,6 @@
-export default {
-  isFolder,
+export {
   getSorterBy,
+  isFolder,
 }
 
 // Constructors

@@ -1,5 +1,5 @@
-import BM, { iterateBookmarks } from './browser/bookmarks'
-import Store from './IndexedDB'
+import BM, { iterateBookmarks } from '../browser/bookmarks'
+import Store from '../lib/IndexedDB'
 
 
 const db = new Store()

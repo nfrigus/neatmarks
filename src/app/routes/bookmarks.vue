@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  import BM from '../lib/browser/bookmarks'
+  import BM from '../browser/bookmarks'
 
   export default {
     data() {

@@ -1,4 +1,4 @@
-import { windows } from '../../api/ChromeAPI'
+import { windows } from '../api/ChromeAPI'
 
 export async function getAllWindows() {
   return new Promise(resolve => windows

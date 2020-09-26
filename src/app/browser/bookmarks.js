@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { bookmarks } from '../../api/ChromeAPI'
+import { bookmarks } from '../api/ChromeAPI'
 
 if (!bookmarks) {
   /* eslint-disable no-console */

@@ -1,5 +1,5 @@
-import BM from '../lib/browser/bookmarks'
-import { clearBackups, createBackup, getBackups } from '../lib/persistance'
+import BM from '../browser/bookmarks'
+import { clearBackups, createBackup, getBackups } from '../service/database'
 
 export default {
   bookmarks: {
