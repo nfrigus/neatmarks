@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-const { bookmarks } = window.chrome || {}
+import { bookmarks } from '../../api/ChromeAPI'
 
 if (!bookmarks) {
   /* eslint-disable no-console */

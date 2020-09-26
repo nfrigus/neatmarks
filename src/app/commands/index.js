@@ -1,13 +1,11 @@
 /* eslint-disable camelcase */
 
-import browser from '../lib/browser'
 import open_tabs_window from './open_tabs_window'
-
+import { commands as api } from '../api/ChromeAPI'
 
 const commands = {
   open_tabs_window,
 }
 
-
-browser.commands.onCommand
+api.onCommand
   .addListener(action => typeof commands[action] === 'function' && commands[action]())

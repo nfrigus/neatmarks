@@ -1,4 +1,4 @@
-import BM, { iterateBookmarks } from '../dao/bookmarks'
+import BM, { iterateBookmarks } from './browser/bookmarks'
 import Store from './IndexedDB'
 
 

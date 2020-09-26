@@ -1,10 +1,11 @@
-const browser = window.chrome;
+import { extension, windows } from '../api/ChromeAPI'
+import window from '../api/WebAPI'
 
 
 export default function () {
-  browser.windows.getCurrent((win) => {
+  windows.getCurrent((win) => {
     const popupWindow = window.open(
-      browser.extension.getURL('app.html#/tabs'),
+      extension.getURL('app.html#/tabs'),
       'Tab manager',
       [
         'alwaysOnTop=yes',

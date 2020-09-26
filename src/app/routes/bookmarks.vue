@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  import BM from '../dao/bookmarks'
+  import BM from '../lib/browser/bookmarks'
 
   export default {
     data() {

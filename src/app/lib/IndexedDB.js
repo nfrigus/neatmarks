@@ -1,4 +1,4 @@
-const { indexedDB } = window
+import { indexedDB } from '../api/WebAPI'
 
 const operations = {
   add: { write: true },

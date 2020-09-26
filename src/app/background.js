@@ -6,12 +6,11 @@
      no-underscore-dangle,
      prefer-template
 */
-import BM from './lib/bookmark'
-import storage from './lib/storage'
-import browser from './lib/browser'
-import BMAO from './dao/bookmarks'
 import './commands'
-
+import BM from './lib/bookmark'
+import BMAO from './lib/browser/bookmarks'
+import storage from './lib/storage'
+import { bookmarks, extension } from './api/ChromeAPI'
 
 const DELAY = 500
 
@@ -89,6 +88,8 @@ const reorderQueue = {
     return this._items.find(item => +item[0] === +parent_id)
   },
 }
+
+init({ bookmarks, extension })
 
 // Utils
 function log(...args) {
@@ -325,6 +326,3 @@ function stop_collaborate_and_listen(request, sender, sendResponse) {
       console.error('Unexpected request')
   }
 }
-
-
-init(browser)

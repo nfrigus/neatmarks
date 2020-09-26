@@ -1,3 +1,5 @@
+import { localStorage } from '../api/WebAPI'
+
 export default {
   get,
   merge,
@@ -5,7 +7,7 @@ export default {
 }
 
 function get(key, defaults) {
-  let value = localStorage[key]
+  let value = localStorage.getItem(key)
 
   try {
     value = JSON.parse(value)
@@ -15,12 +17,12 @@ function get(key, defaults) {
   return value || defaults
 }
 function set(key, value) {
-  localStorage[key] = JSON.stringify(value)
+  localStorage.setItem(key, JSON.stringify(value))
   return this
 }
 function merge(key, data) {
   if (data && typeof data === 'object') {
-    return set(key, Object.assign(get(key) || {}, data))
+    return set(key, Object.assign(get(key, {}), data))
   }
 
   /* eslint-disable no-console */

@@ -15,7 +15,7 @@
     getCurrentBMStats,
     removeBackup,
   } from '../lib/persistance'
-  import BM from '../dao/bookmarks'
+  import BM from '../lib/browser/bookmarks'
 
   export default {
     data: () => ({

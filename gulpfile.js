@@ -62,7 +62,7 @@ async function convertSvg2Pngs({ src, sizes, dest }) {
 async function test() {
   await setNodeEnv('test')
 
-  return src('{server,test}/**/*.spec.js', { read: false })
+  return src('{src,test}/**/*.spec.js', { read: false })
     .pipe(mocha({
       reporter: env.MOCHA_REPORTER || 'nyan',
       require: ['test/setup'],
