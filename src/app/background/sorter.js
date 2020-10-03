@@ -8,8 +8,9 @@
 */
 import BMAO from '../browser/bookmarks'
 import Settings from './settings'
-import { bookmarks, extension } from '../api/ChromeAPI'
+import { bookmarks } from '../api/ChromeAPI'
 import { getSorterBy, isFolder } from './sorter.functions'
+import dispatcher from './dispatcher'
 
 const DELAY = 500
 
@@ -88,7 +89,7 @@ const reorderQueue = {
   },
 }
 
-init({ bookmarks, extension })
+init({ bookmarks })
 
 // Utils
 function log(...args) {
@@ -118,12 +119,12 @@ function sort_buffer(id, parent_id) {
   setTimeout(() => populateSortQueue(id, parent_id), DELAY)
 }
 
-function init({ bookmarks, extension }) {
-  extension.onMessage.addListener(onMessage)
+function init({ bookmarks }) {
+  dispatcher.on('message', onMessage)
 
-  bookmarks.onImportBegan.addListener(onImportBegan)
-  bookmarks.onImportEnded.addListener(onImportEnded)
-  bookmarks.onMoved.addListener(onMoveSortInfoHandler) // always active by intention
+  dispatcher.on('bookmarks.onImportBegan', onImportBegan)
+  dispatcher.on('bookmarks.onImportEnded', onImportEnded)
+  dispatcher.on('bookmarks.onMoved', onMoveSortInfoHandler) // always active by intention
 
   runTreeSort()
   // wait a short while before attempting to activate bookmark change listeners
@@ -139,10 +140,10 @@ function attachListeners({ bookmarks }) {
     // activate listeners so we can keep things organized
     state.status.listeners_active = true
 
-    bookmarks.onCreated.addListener(onCreatedListener)
-    bookmarks.onChanged.addListener(onChangedListener)
-    bookmarks.onMoved.addListener(onMovedListener)
-    bookmarks.onChildrenReordered.addListener(onChildReorderListener)
+    dispatcher.on('bookmarks.onCreated', onCreatedListener)
+    dispatcher.on('bookmarks.onChanged', onChangedListener)
+    dispatcher.on('bookmarks.onMoved', onMovedListener)
+    dispatcher.on('bookmarks.onChildrenReordered', onChildReorderListener)
 
     log('Listeners active.')
   }
@@ -309,19 +310,18 @@ function onMoveSortInfoHandler(id, moveInfo) {
   log('onMoved (all time) > id = ' + id)
   runReorderQueue(moveInfo.parentId)
 }
-function onMessage(request, sender, sendResponse) {
-  switch (request.request) {
+function onMessage(message, sender, sendResponse) {
+  switch (message.request) {
     case 'options.get':
       sendResponse(state.option)
       break
     case 'options.set':
-      state.option = request.option
+      state.option = message.option
       Settings.merge('bookmarks.order', state.option)
 
       sendResponse({ message: 'saved' })
       runTreeSort().catch(console.error)
       break
     default:
-      console.error('Unexpected request')
   }
 }
