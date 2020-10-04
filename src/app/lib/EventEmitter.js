@@ -6,8 +6,23 @@ export default class extends EventEmitter {
     EventEmitter.prototype.emit.call(this, action, ...payoad)
   }
 
+  /**
+   * Proxy events of EventTarget
+   */
   pipe(type, emitter) {
     console.debug(`pipe.${type}`)
     emitter.addListener((...args) => this.emit(type, ...args))
+  }
+
+  /**
+   * Map event into another event
+   */
+  map(type, mapper) {
+    this.on(type, (...args) => {
+      const newType = mapper(...args)
+      if (newType) {
+        this.emit(newType, ...args)
+      }
+    })
   }
 }

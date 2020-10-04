@@ -1,5 +1,5 @@
 import EventEmitter from '../lib/EventEmitter'
-import { bookmarks, runtime } from '../api/ChromeAPI'
+import { alarms, bookmarks, runtime } from '../api/ChromeAPI'
 
 const dispatcher = new EventEmitter()
 
@@ -12,5 +12,8 @@ dispatcher.pipe('bookmarks.onCreated', bookmarks.onCreated)
 dispatcher.pipe('bookmarks.onImportBegan', bookmarks.onImportBegan)
 dispatcher.pipe('bookmarks.onImportEnded', bookmarks.onImportEnded)
 dispatcher.pipe('bookmarks.onMoved', bookmarks.onMoved)
+
+dispatcher.pipe('alarm', alarms.onAlarm)
+dispatcher.map('alarm', alarm => alarm.name && `alarm.${alarm.name}`)
 
 export default dispatcher
