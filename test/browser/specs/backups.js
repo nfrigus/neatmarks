@@ -4,28 +4,27 @@ const DATA = require('../data/bookmarks.json')
 
 
 describe('backups', () => {
+  let backupsCount = 0
+
   before(() => browser.navigate('backup'))
-  it('no default backups', async () => {
-    await browser.page.$eval('.BackupsList-Table', node => node.childElementCount)
-      .should.eventually.equal(0, 'No backups by default')
+  beforeEach(async () => {
+    backupsCount = await browser.page.$eval('.BackupsList-Table', node => node.childElementCount)
+  })
+
+  it('initial backup', async () => {
+    backupsCount.should.equal(1, 'Initial backup should be created')
   })
 
   it('create backup', async () => {
-    await browser.page.$eval('.BackupsList-Table', node => node.childElementCount)
-      .should.eventually.equal(0, 'No backups by default')
-
     browser.click('.BackupsList-Header a').catch()
-    await browser.page.waitFor('.BackupsList-Row:nth-child(1)')
+    await browser.page.waitFor(`.BackupsList-Row:nth-child(${backupsCount + 1})`)
   })
 
   it('create backup before restoring', async () => {
-    await browser.page.$eval('.BackupsList-Table', node => node.childElementCount)
-      .should.eventually.equal(1, 'Expected to have one backup before for this test')
-
     browser.click('.BackupsList-Row:nth-child(1) a').catch()
     await new Promise(r => setTimeout(r, 1e2))
     await browser.page.dialog.accept()
-    await browser.page.waitFor('.BackupsList-Row:nth-child(2)')
+    await browser.page.waitFor(`.BackupsList-Row:nth-child(${backupsCount + 1})`)
   })
 
   it('clear bookmarks', async () => {
