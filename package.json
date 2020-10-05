@@ -1,6 +1,6 @@
 {
   "name": "neatmarks",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "",
   "keywords": [],
   "license": "WTFPL",
@@ -10,7 +10,8 @@
     "build-storybook": "build-storybook",
     "start": "npm run storybook",
     "storybook": "start-storybook -p 3001",
-    "test": "gulp test"
+    "test": "gulp test",
+    "watch": "webpack --watch"
   },
   "dependencies": {
     "font-awesome": "^4.7.0",

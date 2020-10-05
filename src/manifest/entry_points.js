@@ -14,7 +14,7 @@ module.exports = {
     ],
     persistent: false,
   },
-  content_scripts: [
+  content_scripts: undefined && [
     {
       matches: ["<all_urls>"],
       js: [
