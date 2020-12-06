@@ -14,6 +14,7 @@
     "watch": "webpack --watch"
   },
   "dependencies": {
+    "core-js": "^3.8.0",
     "font-awesome": "^4.7.0",
     "iview": "^2.14.3",
     "mosi": "^1.6.0",
@@ -37,7 +38,6 @@
     "babel-loader": "^8.1.0",
     "babel-preset-vue": "^2.0.2",
     "chrome-webstore-upload-cli": "^1.2.0",
-    "core-js": "^2.6.11",
     "crx": "^5.0.1",
     "css-loader": "^3.5.3",
     "del": "^5.1.0",
