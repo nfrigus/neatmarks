@@ -1,15 +1,9 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <main role="main" class="col-sm-9 ml-sm-auto mr-sm-auto col-md-10 pt-3 pb-3">
-        <BMTree
-          :nodes="nodes"
-          @bookmark:remove="remove"
-          @bookmark:restore="restore"
-        ></BMTree>
-      </main>
-    </div>
-  </div>
+  <BMTree
+    :nodes="nodes"
+    @bookmark:remove="remove"
+    @bookmark:restore="restore"
+  ></BMTree>
 </template>
 
 <script>

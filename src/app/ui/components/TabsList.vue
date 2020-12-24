@@ -51,8 +51,6 @@
 <style lang="scss">
   .TabList {
     padding: 0 1em;
-    white-space: nowrap;
-    width: 100%;
 
     ul, li {
       list-style: none;
@@ -71,11 +69,10 @@
       display: block;
       overflow: hidden;
       position: relative;
-      width: 100%;
+    }
 
-      :hover {
-        text-decoration: underline;
-      }
+    &-Title:hover {
+      text-decoration: underline;
     }
 
     &-Close {

@@ -25,9 +25,6 @@ const rules = [{
         js: 'babel-loader',
       },
     },
-  }, {
-    loader: 'iview-loader',
-    options: { prefix: false },
   }],
 }, {
   test: /\.ts$/,

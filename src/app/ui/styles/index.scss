@@ -1,0 +1,30 @@
+@import "./variables.scss";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑",
+  Arial, sans-serif;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+a {
+  color: $color-link;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color .2s ease;
+
+  &:hover {
+    color: $color-link-hover;
+  }
+
+  &:active {
+    color: $color-link-active;
+  }
+}

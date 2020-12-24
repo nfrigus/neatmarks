@@ -1,78 +1,77 @@
 <template>
-  <Layout class="layout">
-    <Header class="layout-header">
-      <Menu mode="horizontal" theme="dark" active-name="1">
-        <MenuItem name="tabs">
-          <router-link v-key="1" :to="{ name: 'tabs' }" active-class="active" title="Tabs">
-            <Icon>book</Icon>
-          </router-link>
-        </MenuItem>
-        <MenuItem name="bookmarks">
-          <router-link v-key="2" :to="{ name: 'bookmarks' }" active-class="active" title="Bookmarks">
-            <Icon>bookmark</Icon>
-          </router-link>
-        </MenuItem>
-        <MenuItem name="backup">
-          <router-link v-key="3" :to="{ name: 'backup' }" active-class="active" title="Backups">
-            <Icon>archive</Icon>
-          </router-link>
-        </MenuItem>
-        <MenuItem name="settings">
-          <router-link v-key="4" :to="{ name: 'options' }" active-class="active" title="Settings">
-            <Icon>cog</Icon>
-          </router-link>
-        </MenuItem>
-      </Menu>
-    </Header>
-    <Content class="layout-content">
+  <div class="layout">
+    <div class="layout-header">
+      <router-link v-key="1" :to="{ name: 'tabs' }" active-class="active" title="Tabs">
+        <Icon>book</Icon>
+      </router-link>
+      <router-link v-key="2" :to="{ name: 'bookmarks' }" active-class="active" title="Bookmarks">
+        <Icon>bookmark</Icon>
+      </router-link>
+      <router-link v-key="3" :to="{ name: 'backup' }" active-class="active" title="Backups">
+        <Icon>archive</Icon>
+      </router-link>
+      <router-link v-key="4" :to="{ name: 'options' }" active-class="active" title="Settings">
+        <Icon>cog</Icon>
+      </router-link>
+    </div>
+    <div class="layout-content">
       <slot></slot>
-    </Content>
-    <Footer class="layout-footer">
+    </div>
+    <div class="layout-footer">
       2017-{{ new Date().getFullYear() }} &copy; NeatMarks
-    </Footer>
-  </Layout>
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
-  html, body {
-    height: 100%;
-    min-width: 160px;
+  @import "../styles/variables";
+
+  $height-header: 4rem;
+  $height-footer: 2rem;
+  $gutter: 1rem;
+
+  body {
+    min-width: 255px;
   }
 
   .layout {
-    background: #f5f7f9;
-    min-height: 100%;
+    background: $color-bg-layout;
+    display: grid;
+    gap: 0;
+    grid-template: "header" $height-header "main" auto "footer" $height-footer / minmax(0, 1fr);
+    min-height: 100vh;
     overflow: hidden;
+    place-content: stretch;
+    place-items: stretch;
     position: relative;
 
     &-header {
-      position: fixed;
-      width: 100%;
-      z-index: 100;
+      background: $color-bg-menu;
+      color: $color-link;
+      font-size: $height-header / 2;
+      line-height: $height-header;
+      list-style: none;
+      margin: 0;
+      padding: 0 $gutter * 2;
 
-      .ivu-menu-item {
-        font-size: 1.5em;
+      a {
+        display: inline-block;
+        margin-right: $gutter;
+
+        &:last-child {
+          margin-right: 0;
+        }
       }
     }
 
-    &-logo {
-      width: 2em;
-      height: 2em;
-      background: #f00 url("/icons/icon.svg");
-    }
-
-    &-nav {
-      font-size: 1.5em;
-    }
-
     &-content {
-      background: #fff;
-      margin: 88px 20px 0;
-      min-height: 500px;
+      background: $color-bg-page;
+      margin: $gutter $gutter 0;
     }
 
     &-footer {
       text-align: center;
+      line-height: $height-footer;
     }
   }
 </style>

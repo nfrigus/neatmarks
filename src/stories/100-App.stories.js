@@ -2,9 +2,7 @@ import { action } from '@storybook/addon-actions'
 import { random } from 'lodash'
 import faker from 'faker'
 
-
 export default { title: 'App' }
-
 
 export const layout = () => ({
   template: '<AppLayout/>',
@@ -83,7 +81,6 @@ function foldersFirst(a, b) {
     return !node.url
   }
 }
-
 
 function mockTabsData() {
   return {

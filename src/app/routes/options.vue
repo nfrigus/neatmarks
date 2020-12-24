@@ -5,47 +5,45 @@
         <div class="wrapper">
           <h2>Bookmarks ordering</h2>
           <form @submit.prevent="onSubmit()">
-            <div class="form-group">
-              <label>Order by</label>
-              <Select v-model="orderBy" name="options.orderBy">
-                <Option value="none" style="font-style: italic">
-                  disable
-                </Option>
-                <OptionGroup label="Title">
-                  <Option value="alpha">
-                    A > Z
-                  </Option>
-                  <Option value="alphaReverse">
-                    Z > A
-                  </Option>
-                </OptionGroup>
-                <OptionGroup label="Date Added">
-                  <Option value="date">
-                    Newer > Older
-                  </Option>
-                  <Option value="dateReverse">
-                    Older > Newer
-                  </Option>
-                </OptionGroup>
-                <OptionGroup label="URL">
-                  <Option value="url">
-                    A > Z
-                  </Option>
-                  <Option value="urlReverse">
-                    Z > A
-                  </Option>
-                </OptionGroup>
-              </Select>
-            </div>
-            <div v-if="orderBy !== 'none'" class="form-group">
-              <label>Delay ordering, seconds</label>
-              <Input v-model="orderDelay" html-type="number"
-                class="form-control" name="options.orderDelay"
-              />
-            </div>
-            <Button html-type="submit" type="primary">
+            <dl>
+              <dt><label>Order by</label></dt>
+              <dd>
+                <select v-model="orderBy" name="options.orderBy">
+                  <option value="none" style="font-style: italic">
+                    disable
+                  </option>
+                  <option value="alpha">
+                    Title: A > Z
+                  </option>
+                  <option value="alphaReverse">
+                    Title: Z > A
+                  </option>
+                  <option value="date">
+                    Date Added: Newer > Older
+                  </option>
+                  <option value="dateReverse">
+                    Date Added: Older > Newer
+                  </option>
+                  <option value="url">
+                    URL: A > Z
+                  </option>
+                  <option value="urlReverse">
+                    URL: Z > A
+                  </option>
+                </select>
+              </dd>
+              <template v-if="orderBy !== 'none'">
+                <dt><label>Delay ordering, seconds</label></dt>
+                <dd>
+                  <input v-model="orderDelay" html-type="number"
+                    class="form-control" name="options.orderDelay"
+                  />
+                </dd>
+              </template>
+            </dl>
+            <button type="submit">
               Save
-            </Button>
+            </button>
           </form>
         </div>
       </main>
