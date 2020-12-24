@@ -56,7 +56,6 @@
 <script>
   const { sendMessage } = window.chrome.extension
 
-
   export default {
     data() {
       return {

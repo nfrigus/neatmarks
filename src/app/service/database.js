@@ -1,9 +1,7 @@
 import BM, { iterateBookmarks } from '../browser/bookmarks'
 import Store from '../lib/IndexedDB'
 
-
 const db = new Store()
-
 
 export { iterateBookmarks }
 
@@ -28,7 +26,6 @@ export async function removeBackup(id) {
 export async function clearBackups() {
   return db.exec('backups', 'clear')
 }
-
 
 function getTreeStats(tree) {
   const stats = {

@@ -177,7 +177,6 @@ function isString(v) {
   return typeof v === 'string'
 }
 
-
 function prepateCreateData(data) {
   const prepared = clone(data)
 

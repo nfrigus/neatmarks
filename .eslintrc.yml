@@ -6,7 +6,9 @@ env:
   browser: true
 rules:
   arrow-parens: 0
+  import/extensions: 0
   import/no-extraneous-dependencies: ["error", {"devDependencies": ["src/stories/**"]}]
+  import/no-unresolved: 0
   max-len: ["error", { "code": 120 }]
   no-alert: 0
   no-bitwise: 0

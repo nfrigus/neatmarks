@@ -30,6 +30,12 @@ const rules = [{
     options: { prefix: false },
   }],
 }, {
+  test: /\.ts$/,
+  loader: 'ts-loader',
+  options: {
+    appendTsSuffixTo: [/\.vue$/],
+  },
+}, {
   test: /\.s?css$/,
   use: [{
     loader: MiniCssExtractPlugin.loader,
@@ -66,9 +72,9 @@ const rules = [{
 
 module.exports = {
   entry: {
-    app: './src/app/app.js',
-    background: './src/app/background/index.js',
-    content_script: './src/app/content_script.js',
+    app: './src/app/app.ts',
+    background: './src/app/background/index.ts',
+    content_script: './src/app/content_script.ts',
   },
   output: {
     filename: '[name].js',
@@ -86,5 +92,5 @@ module.exports = {
       DEBUG: debug,
     }),
   ],
-  resolve: { extensions: ['.js', '.vue', '.json'] },
+  resolve: { extensions: ['.ts', '.js', '.vue', '.json'] },
 }

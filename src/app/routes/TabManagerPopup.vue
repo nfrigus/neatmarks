@@ -21,11 +21,9 @@
     windows,
   } = window.chrome
 
-
   let managerWindowId = null
   let bgWindowId = null
   let pauseManagerClose = false
-
 
   function handleManagerClose() {
     return windows.onFocusChanged.addListener(newWindowId => {

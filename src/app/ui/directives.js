@@ -1,6 +1,5 @@
 export default { install }
 
-
 function install(Vue) {
   const keyActions = {}
 

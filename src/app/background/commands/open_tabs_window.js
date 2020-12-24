@@ -1,7 +1,6 @@
 import { extension, windows } from '../../api/ChromeAPI'
 import window from '../../api/WebAPI'
 
-
 export default function () {
   windows.getCurrent((win) => {
     const popupWindow = window.open(

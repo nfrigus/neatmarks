@@ -8,13 +8,14 @@ const operations = {
 }
 
 export default class {
+  private connection
+
   constructor() {
     const request = indexedDB.open('store', 1)
-    const connection = promisify(request)
 
     request.onupgradeneeded = onUpgradeNeeded
 
-    Object.assign(this, { connection })
+    this.connection = promisify(request)
   }
 
   async exec(store, action, payload) {

@@ -3,7 +3,6 @@ import OptionPage from './options.vue'
 import TabsPopup from './TabManagerPopup.vue'
 import Backup from './Backup.vue'
 
-
 export default [
   { name: 'bookmarks', path: '/bookmarks', component: BMPage },
   { name: 'options', path: '/options', component: OptionPage },

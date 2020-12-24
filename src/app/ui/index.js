@@ -5,7 +5,6 @@ import VueRouter from 'vue-router'
 import * as components from './components'
 import directives from './directives'
 
-
 export const UiPlugin = {
   install(Vue) {
     Vue.use(iView)
@@ -18,7 +17,6 @@ export const UiPlugin = {
     Object.assign(Vue, {
       App,
     })
-
 
     function App(el, routes) {
       return new Vue({

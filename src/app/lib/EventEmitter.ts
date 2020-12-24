@@ -1,9 +1,9 @@
-import EventEmitter from 'events'
+import { EventEmitter } from 'events'
 
 export default class extends EventEmitter {
   emit(action, ...payoad) {
     console.debug(action, ...payoad)
-    EventEmitter.prototype.emit.call(this, action, ...payoad)
+    return EventEmitter.prototype.emit.call(this, action, ...payoad)
   }
 
   /**
