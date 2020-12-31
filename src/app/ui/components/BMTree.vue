@@ -71,6 +71,7 @@
         return {
           'BMTree-node': 1,
           'BMTree-node_collapsed': node.collapsed,
+          'BMTree-node_deleted': node.isDeleted,
         }
       },
       async remove(payload) {
@@ -113,6 +114,10 @@
         .BMTree-root {
           display: none;
         }
+      }
+
+      &_deleted {
+        opacity: .5;
       }
     }
 
