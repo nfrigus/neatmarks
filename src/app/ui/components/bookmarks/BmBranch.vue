@@ -7,9 +7,10 @@
       :title="getTitle(node)"
     >
       <div :data-bm-id="node.id" class="BmBranch-Item" draggable="true" @click="toggleCollapse(node)">
-        <Icon :title="node.id">
+        <Icon v-if="isFolder(node)" :title="node.id">
           {{ getIcon(node) }}
         </Icon>
+        <img v-else :src="getIconLink(node)" />
         <a :href="node.url" :title="node.url">{{ node.title }}</a>
         <time class="BmBranch-time">{{ getDateAdded(node) }}</time>
         <div class="BmBranch-ActionBox">
@@ -169,6 +170,10 @@
 
       &:hover {
         background-color: RGBA(0, 0, 0, .1);
+      }
+
+      > img {
+        vertical-align: top;
       }
     }
 
