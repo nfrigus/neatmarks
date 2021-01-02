@@ -1,6 +1,7 @@
 <template>
   <BmTree
     :nodes="nodes"
+    @bookmark:refresh="refresh"
     @bookmark:remove="remove"
     @bookmark:restore="restore"
   ></BmTree>
@@ -13,14 +14,17 @@
   export default {
     components: { BmTree },
     data() {
-      BM.getTree()
-        .then(nodes => this.nodes = nodes[0].children)
+      this.refresh()
 
       return {
         nodes: [],
       }
     },
     methods: {
+      refresh() {
+        BM.getTree()
+          .then(nodes => this.nodes = nodes[0].children)
+      },
       remove: BM.remove,
       async restore({ next, node }) {
         BM.create({

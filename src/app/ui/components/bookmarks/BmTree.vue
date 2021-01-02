@@ -4,7 +4,7 @@
       <a v-key="'f'" @click="toggleCollapseAll()">
         <Icon>{{ forceCollapse ? 'expand' : 'compress' }}</Icon>
       </a>
-      <a v-key="'r'" @click="refresh()">
+      <a v-key="'r'" @click="$emit('bookmark:refresh')">
         <Icon>refresh</Icon>
       </a>
     </div>
@@ -35,7 +35,6 @@
       toggleCollapseAll() {
         this.forceCollapse = !this.forceCollapse
       },
-      refresh() {},
     },
   }
 </script>
