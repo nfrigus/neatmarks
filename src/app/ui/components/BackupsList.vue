@@ -2,7 +2,7 @@
   <div class="BackupsList">
     <div class="BackupsList-Header">
       <div>
-        <BMStats :stats="stats" />
+        <BmStats :stats="stats" />
       </div>
       <div>
         <a @click="action('backup')">
@@ -25,7 +25,7 @@
           {{ getTime(backup.createdAt) }}
         </div>
         <div>
-          <BMStats :stats="backup.stats" />
+          <BmStats :stats="backup.stats" />
         </div>
         <div class="BackupsList-Actions">
           <a @click.stop="action('restore', backup)">

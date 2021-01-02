@@ -22,7 +22,7 @@ export const UiPlugin = {
         /* eslint-disable no-unused-vars */
         render: (h) => (
           <AppLayout>
-            <router-view></router-view>
+            <router-view />
           </AppLayout>
         ),
         router: new Router(routes),

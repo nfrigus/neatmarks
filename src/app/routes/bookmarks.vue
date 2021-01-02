@@ -1,15 +1,17 @@
 <template>
-  <BMTree
+  <BmTree
     :nodes="nodes"
     @bookmark:remove="remove"
     @bookmark:restore="restore"
-  ></BMTree>
+  ></BmTree>
 </template>
 
-<script>
+<script lang="ts">
   import BM from '../browser/bookmarks'
+  import BmTree from '../ui/components/bookmarks/BmTree'
 
   export default {
+    components: { BmTree },
     data() {
       BM.getTree()
         .then(nodes => this.nodes = nodes[0].children)
@@ -19,21 +21,13 @@
       }
     },
     methods: {
-      async remove({ $el, node }) {
-        await BM.remove(node.id)
-        node.isDeleted = true
-        $el.$forceUpdate()
-      },
-      async restore({ $el, node }) {
-        const restored = await BM.create({
+      remove: BM.remove,
+      async restore({ next, node }) {
+        BM.create({
           parentId: node.parentId,
           title: node.title,
           url: node.url,
-        })
-
-        Object.assign(node, restored)
-        node.isDeleted = false
-        $el.$forceUpdate()
+        }).then(next)
       },
     },
   }

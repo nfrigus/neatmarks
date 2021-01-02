@@ -43,7 +43,7 @@ export const backups = () => ({
   data: mockBackupsData,
 })
 export const bookmarks = () => ({
-  template: `<BMTree
+  template: `<BmTree
     :nodes="nodes"
     @bookmark:remove="remove"
     @bookmark:restore="restore"
