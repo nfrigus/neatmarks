@@ -40,7 +40,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   const confirmMessages = {
     delete: 'Are you sure you want to remove backup?',
     restore: 'This action will create backup and replace all existing bookmarks. Proceed?',

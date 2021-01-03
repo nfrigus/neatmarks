@@ -51,8 +51,8 @@
   </div>
 </template>
 
-<script>
-  const { sendMessage } = window.chrome.extension
+<script lang="ts">
+  const { sendMessage } = (window.chrome as any).extension
 
   export default {
     data() {

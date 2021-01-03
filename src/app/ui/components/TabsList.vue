@@ -21,7 +21,7 @@
   </ul>
 </template>
 
-<script>
+<script lang="ts">
   function closeWindow(window) {
     this.$emit('window:close', window)
   }

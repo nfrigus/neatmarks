@@ -8,7 +8,7 @@
   />
 </template>
 
-<script>
+<script lang="ts">
   import {
     focusWindow,
     getAllWindows,

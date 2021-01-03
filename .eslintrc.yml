@@ -1,4 +1,9 @@
 root: true
+parserOptions:
+  ecmaFeatures: { jsx: true }
+  ecmaVersion: 2018
+  parser: '@typescript-eslint/parser'
+  sourceType: module
 extends:
   - 'plugin:vue/recommended'
   - 'airbnb-base'
@@ -12,6 +17,7 @@ rules:
   max-len: ["error", { "code": 120 }]
   no-alert: 0
   no-bitwise: 0
+  no-console: ["warn", { allow: ["info", "warn", "error", "debug"] }]
   no-extra-semi: 2
   no-mixed-operators: 0
   no-param-reassign: 0

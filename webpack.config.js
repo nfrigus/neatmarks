@@ -11,7 +11,7 @@ const rules = [{
   exclude: /node_modules/,
   loader: "eslint-loader",
   options: { fix: true },
-  test: /\.(js|vue)$/,
+  test: /\.(jsx?|vue|tsx?)$/,
 }, {
   test: /\.js$/,
   use: ['babel-loader'],
@@ -27,7 +27,7 @@ const rules = [{
     },
   }],
 }, {
-  test: /\.ts$/,
+  test: /\.tsx?$/,
   loader: 'ts-loader',
   options: {
     appendTsSuffixTo: [/\.vue$/],

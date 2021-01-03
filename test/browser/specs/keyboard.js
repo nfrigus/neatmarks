@@ -7,7 +7,7 @@ describe('keyboard tabs navigation', () => {
 
   ;[
     ['open tabs', '1', '.TabList'],
-    ['open bookmarks', '2', '.BMTree-root'],
+    ['open bookmarks', '2', '.BmTree'],
     ['open backups', '3', '.BackupsList'],
     ['open settings', '4', 'form'],
   ].map(([action, key, selector]) =>

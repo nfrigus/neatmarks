@@ -1,12 +1,9 @@
 import Vue from 'vue'
 import AppAPI from './api/AppAPI'
-import routes from './routes'
 import { UiPlugin } from './ui'
+import App from './App.vue'
 
 Vue.use(UiPlugin)
 
-document.addEventListener('DOMContentLoaded', () =>
-  // @ts-ignore
-  new Vue.App('#app', routes))
-
-window['app'] = AppAPI
+document.addEventListener('DOMContentLoaded', () => new Vue(App as {}));
+(window as any).app = AppAPI
