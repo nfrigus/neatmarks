@@ -2,6 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "target": "esnext"
+    "target": "esnext",
+    "types": ["chrome", "vue"]
   }
 }

@@ -8,7 +8,7 @@
   "scripts": {
     "build": "gulp build:prod",
     "build-storybook": "build-storybook",
-    "lint": "npx eslint \"src/app/**/*.{js,vue,ts}\"",
+    "lint": "eslint \"src/app/**/*.{js,vue,ts}\"",
     "start": "npm run storybook",
     "storybook": "start-storybook -p 3001",
     "test": "gulp test",
@@ -34,6 +34,7 @@
     "@storybook/vue": "^5.3.18",
     "@types/chrome": "0.0.126",
     "@types/vue": "^2.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.11.1",
     "@typescript-eslint/parser": "^4.11.1",
     "@vue/babel-preset-jsx": "^1.1.2",
     "autoprefixer": "^9.7.6",

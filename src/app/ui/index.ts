@@ -1,13 +1,15 @@
 import VueRouter from 'vue-router'
-import './styles/index.scss'
+import { VueConstructor } from 'vue/types/vue'
 import 'font-awesome/scss/font-awesome.scss'
+
+import './styles/index.scss'
 import * as components from './components'
 import directives from './directives'
 
 export * from './components'
 
 export const UiPlugin = {
-  install(Vue) {
+  install(Vue: VueConstructor): void {
     Vue.use(VueRouter)
     Vue.use(directives)
 

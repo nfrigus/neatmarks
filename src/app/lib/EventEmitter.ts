@@ -18,7 +18,7 @@ export default class extends EventEmitter {
    * Map event into another event
    */
   map(type, mapper) {
-    this.on(type, (...args) => {
+    (this as EventEmitter).on(type, (...args) => {
       const newType = mapper(...args)
       if (newType) {
         this.emit(newType, ...args)

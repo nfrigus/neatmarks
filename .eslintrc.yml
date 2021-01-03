@@ -1,15 +1,19 @@
 root: true
+parser: vue-eslint-parser
 parserOptions:
   ecmaFeatures: { jsx: true }
-  ecmaVersion: 2018
+  ecmaVersion: 2020
   parser: '@typescript-eslint/parser'
   sourceType: module
 extends:
-  - 'plugin:vue/recommended'
   - 'airbnb-base'
+  - 'plugin:@typescript-eslint/recommended'
+  - 'plugin:vue/recommended'
 env:
   browser: true
 rules:
+  "@typescript-eslint/explicit-module-boundary-types": 0
+  "@typescript-eslint/no-explicit-any": 0
   arrow-parens: 0
   import/extensions: 0
   import/no-extraneous-dependencies: ["error", {"devDependencies": ["src/stories/**"]}]
