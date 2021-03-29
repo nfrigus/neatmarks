@@ -4,10 +4,10 @@ function install(Vue) {
   const keyActions = {}
 
   Vue.directive('key', {
-    bind(el, binding) {
+    mounted(el, binding) {
       keyActions[binding.value] = () => el.click()
     },
-    unbind(el, binding) {
+    unmounted(el, binding) {
       delete keyActions[binding.value]
     },
   })

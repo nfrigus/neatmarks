@@ -58,10 +58,10 @@
           value
             .filter(node => !this.attr[node.id])
             .forEach(node => {
-              this.$set(this.attr, node.id, {
+              this.attr[node.id] = {
                 collapsed: false,
                 isDeleted: false,
-              })
+              }
             })
         },
       },

@@ -1,15 +1,15 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import AppAPI from './api/AppAPI'
-import { UiPlugin } from './ui'
 import App from './App.vue'
+import { UiPlugin } from './ui'
 
-Vue.use(UiPlugin)
-
-document.addEventListener('DOMContentLoaded', () => new Vue(App as Record<string, unknown>));
+document.addEventListener('DOMContentLoaded', () => createApp(App)
+  .use(UiPlugin)
+  .mount('#app'))
 
 declare global {
   interface Window {
-    app: typeof AppAPI;
+    app: typeof AppAPI
   }
 }
 

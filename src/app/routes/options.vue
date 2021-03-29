@@ -79,7 +79,6 @@
       },
       async onSubmit() {
         await this.save()
-        this.$Message.info('Saved.')
       },
     },
   }

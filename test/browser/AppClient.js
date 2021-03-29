@@ -6,9 +6,9 @@ module.exports = class AppClient {
   }
 
   async exec(method, ...args) {
-    await this.page.evaluate(new Function(`Promise.resolve(app.${method}(...${JSON.stringify(args)})).then(ret => {window.ret = ret}).catch(console.error)`))
-
-    return this.page.evaluate(() => window.ret)
+    return this.page.evaluate(new Function(
+      `return app.${method}(...${JSON.stringify(args, null, 2)})`,
+    ))
   }
 
   async setBookmarks(links) {
@@ -35,6 +35,11 @@ module.exports = class AppClient {
   }
 
   async reload() {
-    return this.page.reload()
+    await this.page.reload()
+    await this.ready()
+  }
+
+  async ready() {
+    return new Promise(resolve => this.page.once('domcontentloaded', resolve))
   }
 }

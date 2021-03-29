@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "jsx": "preserve",
+    "module": "esnext",
     "moduleResolution": "node",
     "target": "esnext",
     "types": ["chrome", "vue"]

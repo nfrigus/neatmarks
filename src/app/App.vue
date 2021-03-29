@@ -5,12 +5,11 @@
 </template>
 
 <script lang="ts">
-  import AppRouter from './routes'
+  import { createAppRouter } from './routes'
   import { AppLayout } from './ui'
 
   export default {
-    el: '#app',
     comments: { AppLayout },
-    router: new AppRouter(),
+    router: createAppRouter(),
   }
 </script>

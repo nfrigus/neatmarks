@@ -7,7 +7,7 @@
     methods: {
       getClassNames() {
         return {
-          [`fa-${this.$slots.default[0].text.trim()}`]: 1,
+          [`fa-${this.$slots.default()[0].children.trim()}`]: 1,
           fa: 1,
           fas: 1,
         }
