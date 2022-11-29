@@ -7,25 +7,18 @@ const sourceMap = debug
 
 
 const rules = [{
+  test: /\.mjs$/,
+  include: /node_modules/,
+  type: "javascript/auto",
+}, {
   enforce: "pre",
   exclude: /node_modules/,
   loader: "eslint-loader",
   options: { fix: true },
-  test: /\.(jsx?|vue|tsx?)$/,
-}, {
-  test: /\.js$/,
-  use: ['babel-loader'],
-  exclude: /node_modules/,
+  test: /\.(js|vue|ts)$/,
 }, {
   test: /\.vue$/,
-  use: [{
-    loader: 'vue-loader',
-    options: {
-      loaders: {
-        js: 'babel-loader',
-      },
-    },
-  }],
+  use: ['vue-loader'],
 }, {
   test: /\.tsx?$/,
   loader: 'ts-loader',
@@ -41,29 +34,12 @@ const rules = [{
     loader: 'css-loader',
     options: { sourceMap },
   }, {
-    loader: 'postcss-loader',
-    options: {
-      sourceMap,
-      ident: 'postcss',
-      plugins: () => [
-        require('precss'),
-        require('autoprefixer'),
-      ],
-    },
-  }, {
     loader: 'sass-loader',
     options: { sourceMap },
   }],
 }, {
   test: /.(ttf|otf|eot|svg|woff2?)(\?[a-z0-9]+)?$/,
-  use: [{
-    loader: 'file-loader',
-    options: {
-      esModule: false,
-      name: '[name].[ext]',
-      outputPath: 'fonts/',
-    },
-  }],
+  type: 'asset/resource',
 }]
 
 
@@ -87,6 +63,10 @@ module.exports = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: process.env.NODE_ENV || 'development',
       DEBUG: debug,
+    }),
+    new webpack.DefinePlugin({
+      __VUE_OPTIONS_API__: true,
+      __VUE_PROD_DEVTOOLS__: debug,
     }),
   ],
   resolve: { extensions: ['.ts', '.js', '.vue', '.json'] },

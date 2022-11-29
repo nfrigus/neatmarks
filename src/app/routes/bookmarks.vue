@@ -9,7 +9,7 @@
 
 <script lang="ts">
   import BM from '../browser/bookmarks'
-  import BmTree from '../ui/components/bookmarks/BmTree'
+  import BmTree from '../ui/components/bookmarks/BmTree.vue'
 
   export default {
     components: { BmTree },

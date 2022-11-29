@@ -6,6 +6,6 @@ module.exports = async ({ config }) => ({
   plugins: uniqBy([...custom.plugins, ...config.plugins], i => i.constructor.name),
   module: {
     ...config.module,
-    rules: [...custom.module.rules /*...config.module.rules*/],
+    rules: [...custom.module.rules.filter(i => i.loader !== 'eslint-loader')],
   },
 })

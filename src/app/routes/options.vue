@@ -35,7 +35,8 @@
               <template v-if="orderBy !== 'none'">
                 <dt><label>Delay ordering, seconds</label></dt>
                 <dd>
-                  <input v-model="orderDelay" html-type="number"
+                  <input
+v-model="orderDelay" html-type="number"
                     class="form-control" name="options.orderDelay"
                   />
                 </dd>

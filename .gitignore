@@ -1,5 +1,4 @@
 dist/
 node_modules/
-package-lock.json
 test/temp/
 test/setup.local.js

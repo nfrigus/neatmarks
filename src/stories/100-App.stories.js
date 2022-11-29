@@ -2,11 +2,15 @@ import { action } from '@storybook/addon-actions'
 import { random } from 'lodash'
 import faker from 'faker'
 
-export default { title: 'App' }
+
+export default {
+  title: 'Main/App',
+};
 
 export const layout = () => ({
   template: '<AppLayout/>',
 })
+
 export const tabs = () => ({
   template: `<TabsList
     :windows="windows"

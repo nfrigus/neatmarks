@@ -19,8 +19,8 @@
 </template>
 
 <script lang="ts">
-  import BmBranch from './BmBranch'
-  import Icon from '../Icon'
+  import BmBranch from './BmBranch.vue'
+  import Icon from '../Icon.vue'
 
   export default {
     name: 'BmTree',

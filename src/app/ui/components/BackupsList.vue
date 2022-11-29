@@ -18,7 +18,7 @@
         @click.prevent="click(backup)"
         @mouseover="hover(backup)"
       >
-        <div>{{ index + 1 }}</div>
+        <div>{{ index as number + 1 }}</div>
         <div>
           {{ getDate(backup.createdAt) }}
           <br />

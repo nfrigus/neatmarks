@@ -13,7 +13,7 @@ module.exports = {
   get app() { return app },
   get page() { return pages[0] },
   getPage,
-  init: async () => { await getBrowser() },
+  init: getBrowser,
   navigate,
 }
 
@@ -43,7 +43,7 @@ async function getBrowser() {
 async function navigate(path, page) {
   const _page = page || await getPage()
 
-  await _page.goto(`chrome-extension://jcagcimhnijkdeapbckfleadlfehkgle/app.html#/${path}`)
+  await _page.goto(`chrome-extension://nejkflbmkpbclchdiohchbodllhmllgo/app.html#/${path}`)
 }
 
 async function click(selector, page) {
