@@ -6,11 +6,11 @@
       :class="getClassList(node)"
       :title="getTitle(node)"
     >
-      <div :data-bm-id="node.id" class="BmBranch-Item" draggable="true" @click="toggleCollapse(node)">
-        <Icon v-if="isFolder(node)" :title="node.id">
-          {{ getIcon(node) }}
-        </Icon>
-        <img v-else :src="getIconLink(node)" />
+      <div :data-bm-id="node.id" class="BmBranch-Item" draggable="true" @click="toggleCollapsed(node)">
+        <div class="BmBranch-Icon" :title="node.id">
+          <Icon v-if="isFolder(node)">{{ getFaIconName(node) }}</Icon>
+          <img v-else :src="getIconSrc(node)" srcset="/icons/16.png"/>
+        </div>
         <a :href="node.url" :title="node.url">{{ node.title }}</a>
         <time class="BmBranch-time">{{ getDateAdded(node) }}</time>
         <div class="BmBranch-ActionBox">
@@ -32,6 +32,10 @@
 
 <script lang="ts">
   import Icon from '../Icon.vue'
+
+  function getBmType(node) {
+    return node.url ? "link" : "folder"
+  }
 
   export default {
     name: 'BmBranch',
@@ -60,44 +64,57 @@
             .forEach(node => {
               this.attr[node.id] = {
                 collapsed: false,
-                isDeleted: false,
+                removed: false,
               }
             })
         },
       },
       forceCollapse(value) {
         this.entries.forEach(node => {
-          this.attr[node.id].collapsed = value
+          this.setCollapsed(node, value)
         })
       },
     },
     methods: {
-      toggleCollapse(node) {
-        this.attr[node.id].collapsed = !this.attr[node.id].collapsed
+      //region Collapse status methods
+      setCollapsed(node, value) {
+        this.attr[node.id].collapsed = value
       },
-      getIcon(node) {
-        switch (this.getType(node)) {
+      isCollapsed(node) {
+        return this.attr[node.id].collapsed
+      },
+      toggleCollapsed(node) {
+        this.attr[node.id].collapsed = !this.isCollapsed(node)
+      },
+      //endregion
+
+      //region Remove status methods
+      setRemoved(node, value) {
+        this.attr[node.id].removed = value
+      },
+      isRemoved(node) {
+        return this.attr[node.id].removed
+      },
+      //endregion
+
+      getFaIconName(node) {
+        switch (getBmType(node)) {
           case 'link':
             return 'file'
           case 'folder':
-            return this.attr[node.id].collapsed
+            return this.isCollapsed(node)
               ? 'folder'
               : 'folder-open'
           default:
-            throw new Error()
+            const msg = `${node.id}: unable to detect node type`
+            console.error(msg)
+            throw new Error(msg)
         }
       },
-      getIconLink(node) {
-        return `chrome://favicon/size/16@1x/${encodeURI(node.url)}`
-      },
-      getType(node) {
-        return node.url ? 'link' : 'folder'
-      },
-      isFolder(node) {
-        return this.getType(node) === 'folder'
-      },
+      getIconSrc: node => `chrome://favicon/size/16@1x/${encodeURI(node.url)}`,
+      isFolder: node => getBmType(node) === "folder",
       getTrashIcon(node) {
-        return this.attr[node.id].isDeleted ? 'reply' : 'trash'
+        return this.isRemoved(node) ? 'reply' : 'trash'
       },
       getDateAdded(node) {
         return new Date(node.dateAdded).toISOString().substr(0, 10)
@@ -108,8 +125,8 @@
       getClassList(node) {
         return {
           'BmBranch-node': 1,
-          'BmBranch-node_collapsed': this.attr[node.id].collapsed,
-          'BmBranch-node_deleted': this.attr[node.id].isDeleted,
+          'BmBranch-node_collapsed': this.isCollapsed(node),
+          'BmBranch-node_deleted': this.isRemoved(node),
         }
       },
       replaceNode(prev, next) {
@@ -119,9 +136,9 @@
         Object.assign(prev, next)
       },
       onTrashBtnClick(node) {
-        const isDeleted = !this.attr[node.id].isDeleted
+        const isRemoved = !this.isRemoved(node)
 
-        if (isDeleted) {
+        if (isRemoved) {
           this.$emit('bookmark:remove', node.id)
         } else {
           this.$emit('bookmark:restore', {
@@ -130,7 +147,7 @@
           })
         }
 
-        this.attr[node.id].isDeleted = isDeleted
+        this.setRemoved(node, isRemoved)
       },
     },
   }
@@ -179,6 +196,15 @@
 
     &-Item:hover &-ActionBox {
       display: block;
+    }
+
+    &-Icon {
+      display: inline-block;
+      height: 16px;
+      line-height: 18px;
+      text-align: center;
+      vertical-align: middle;
+      width: 16px;
     }
 
     &-ActionBox {
