@@ -1,7 +1,7 @@
 import { extension, windows } from '../../api/ChromeAPI'
 import window from '../../api/WebAPI'
 
-export default function () {
+export default function command() {
   windows.getCurrent((win) => {
     const popupWindow = window.open(
       extension.getURL('app.html#/tabs'),
@@ -13,7 +13,7 @@ export default function () {
         `top=${window.screenTop - 70}`,
         'width=400',
       ].join(','),
-    );
-    popupWindow.initialWindowId = win.id;
-  });
+    )
+    popupWindow.initialWindowId = win.id
+  })
 }

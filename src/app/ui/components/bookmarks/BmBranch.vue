@@ -8,8 +8,10 @@
     >
       <div :data-bm-id="node.id" class="BmBranch-Item" draggable="true" @click="toggleCollapsed(node)">
         <div class="BmBranch-Icon" :title="node.id">
-          <Icon v-if="isFolder(node)">{{ getFaIconName(node) }}</Icon>
-          <img v-else :src="getIconSrc(node)" srcset="/icons/16.png"/>
+          <Icon v-if="isFolder(node)">
+            {{ getFaIconName(node) }}
+          </Icon>
+          <img v-else :src="getIconSrc(node)" srcset="/icons/16.png" />
         </div>
         <a :href="node.url" :title="node.url">{{ node.title }}</a>
         <time class="BmBranch-time">{{ getDateAdded(node) }}</time>
@@ -34,7 +36,7 @@
   import Icon from '../Icon.vue'
 
   function getBmType(node) {
-    return node.url ? "link" : "folder"
+    return node.url ? 'link' : 'folder'
   }
 
   export default {
@@ -76,7 +78,7 @@
       },
     },
     methods: {
-      //region Collapse status methods
+      // region Collapse status methods
       setCollapsed(node, value) {
         this.attr[node.id].collapsed = value
       },
@@ -86,16 +88,16 @@
       toggleCollapsed(node) {
         this.attr[node.id].collapsed = !this.isCollapsed(node)
       },
-      //endregion
+      // endregion
 
-      //region Remove status methods
+      // region Remove status methods
       setRemoved(node, value) {
         this.attr[node.id].removed = value
       },
       isRemoved(node) {
         return this.attr[node.id].removed
       },
-      //endregion
+      // endregion
 
       getFaIconName(node) {
         switch (getBmType(node)) {
@@ -112,7 +114,7 @@
         }
       },
       getIconSrc: node => `chrome://favicon/size/16@1x/${encodeURI(node.url)}`,
-      isFolder: node => getBmType(node) === "folder",
+      isFolder: node => getBmType(node) === 'folder',
       getTrashIcon(node) {
         return this.isRemoved(node) ? 'reply' : 'trash'
       },

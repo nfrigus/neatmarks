@@ -21,6 +21,7 @@ rules:
   max-len: ["error", { "code": 120 }]
   no-alert: 0
   no-bitwise: 0
+  no-case-declarations: 0
   no-console: ["warn", { allow: ["info", "warn", "error", "debug"] }]
   no-extra-semi: 2
   no-mixed-operators: 0
@@ -41,6 +42,3 @@ overrides:
       vue/html-self-closing: 0
       vue/max-attributes-per-line: 0
       vue/no-parsing-error: [2, { "x-invalid-end-tag": false }]
-  - files: ['storybook-init-framework-entry.js']
-    rules:
-      import/no-extraneous-dependencies: 0
