@@ -10,7 +10,7 @@
     "build-storybook": "build-storybook",
     "lint": "eslint \"src/app/**/*.{js,vue,ts}\"",
     "start": "npm run storybook",
-    "storybook": "start-storybook -p 3001",
+    "storybook": "start-storybook -p 3001 --no-open",
     "test": "gulp test",
     "watch": "webpack --watch"
   },
