@@ -11,7 +11,9 @@
           <Icon v-if="isFolder(node)">
             {{ getFaIconName(node) }}
           </Icon>
-          <img v-else :src="getIconSrc(node)" srcset="/icons/16.png" />
+          <object v-else :data="getIconSrc(node)" type="image/png">
+            <img src="/icons/16.png" alt="favicon">
+          </object>
         </div>
         <a :href="node.url" :title="node.url">{{ node.title }}</a>
         <time class="BmBranch-time">{{ getDateAdded(node) }}</time>
