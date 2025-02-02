@@ -2,12 +2,11 @@ module.exports = {
   stories: [
     "../**/*.stories.@(js|ts)",
   ],
-  addons: [
-    "@storybook/addon-essentials",
-  ],
-  framework: "@storybook/vue3",
-  core: {
-    builder: "@storybook/builder-webpack5",
+  addons: ["@storybook/addon-essentials", "@storybook/addon-webpack5-compiler-babel"],
+  docs: {},
+  framework: {
+    name: "@storybook/vue3-webpack5",
+    options: {}
   },
   staticDirs: ['../dist'],
 }
