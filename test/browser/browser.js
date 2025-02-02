@@ -43,7 +43,7 @@ async function getBrowser() {
 async function navigate(path, page) {
   const _page = page || await getPage()
 
-  await _page.goto(`chrome-extension://nejkflbmkpbclchdiohchbodllhmllgo/app.html#/${path}`)
+  await _page.goto(`chrome-extension://phbiinjepjdlfkehhdnglckceccheidc/app.html#/${path}`)
 }
 
 async function click(selector, page) {
