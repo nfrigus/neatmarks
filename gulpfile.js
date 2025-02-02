@@ -12,15 +12,15 @@ const { env } = process
 const pack = run('crx pack -o dist/dist.crx dist')
 const webpack = run('webpack')
 
-const assetsTasks = [buildLogo, buildStatic, buildManifest]
-const buildTasks = [parallel(...assetsTasks, webpack), pack]
+const buildAssets = [buildStatic, parallel(buildLogo, buildManifest)]
+const buildTasks = [buildAssets, webpack, pack]
 
 const build = series(buildTasks)
 const buildClean = series(clean, ...buildTasks)
 const buildProd = series(setProductionEnv, clean, ...buildTasks)
 
 module.exports = {
-  'build:assets': parallel(...assetsTasks),
+  'build:assets': buildAssets,
   'build:clean': buildClean,
   'build:manifest': buildManifest,
   'build:prod': buildProd,
@@ -41,6 +41,8 @@ function buildStatic() {
     .pipe(dest('dist'))
 }
 function buildLogo() {
+  // https://stackoverflow.com/a/79114850
+  process.env.OPENSSL_CONF = "/dev/null"
   return convertSvg2Pngs({
     dest: 'dist/icons/{size}.png',
     sizes: [16, 32, 48, 64, 128],
