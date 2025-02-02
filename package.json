@@ -6,9 +6,10 @@
   "license": "WTFPL",
   "author": "",
   "scripts": {
-    "build": "gulp build:prod",
     "build-storybook": "build-storybook",
+    "build": "gulp build:prod",
     "lint": "eslint \"src/app/**/*.{js,vue,ts}\"",
+    "prepare": "gulp",
     "start": "npm run storybook",
     "storybook": "start-storybook -p 3001 --no-open",
     "test": "gulp test",
@@ -47,9 +48,8 @@
     "lodash": "^4.17.15",
     "mini-css-extract-plugin": "^1.6.2",
     "mocha": "^7.1.2",
-    "node-sass": "^7.0.1",
     "puppeteer": "^3.0.1",
-    "sass-loader": "^10.3.1",
+    "sass-loader": "^16.0.4",
     "should": "^13.2.3",
     "sinon-chrome": "^3.0.1",
     "svg2png": "^4.1.1",
@@ -59,6 +59,6 @@
     "webpack-cli": "^4.10.0"
   },
   "engines": {
-    "node": "~16"
+    "node": "~18"
   }
 }
