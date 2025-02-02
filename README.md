@@ -1,10 +1,11 @@
-# NeatMarks
-
+NeatMarks
+===
 
 NeatMarks is a chrome extension designed to handle growing sets of open tabs, windows and bookmarks.
 Can be installed from [Chrome Web Store](https://chrome.google.com/webstore/detail/neatmarks/mlcmkgeappghbppgldgebllehhbbnclg).
 
-## Features
+Features
+---
 
 * Bookmarks management
     * Auto-sorting
@@ -23,7 +24,8 @@ Can be installed from [Chrome Web Store](https://chrome.google.com/webstore/deta
 * TabManager
 
 
-## Deploy
+Deploy
+---
 
 - Be sure to set the environment variables used in `publish.sh`
 - You can get these variables by following [the guide](https://github.com/DrewML/chrome-webstore-upload/blob/935a8b484b74dec73b389eb0d01d68c3ea25690a/How%20to%20generate%20Google%20API%20keys.md)
