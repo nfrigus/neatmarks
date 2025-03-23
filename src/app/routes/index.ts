@@ -12,7 +12,9 @@ export function createAppRouter() {
       { name: 'bookmarks', path: '/bookmarks', component: Bookmarks },
       { name: 'options', path: '/options', component: OptionPage },
       { name: 'popup', path: '/popup', component: () => window.chrome.tabs.create({ url: '/app.html#/bookmarks' }) },
-      { name: 'tabs', path: '/tabs', component: TabsPopup },
+      {
+        name: 'tabs', path: '/tabs', component: TabsPopup, props: ({ query }) => ({ isPopup: query.popup === 'true' }),
+      },
       { name: 'backup', path: '/backup', component: Backup },
     ],
   })

@@ -1,26 +1,17 @@
+// https://developer.chrome.com/docs/extensions/reference/api/commands
 module.exports = {
   open_tabs_window: {
-    suggested_key: {
-      windows: "Alt+Space",
-      mac: "Alt+Space",
-      chromeos: "Alt+Space",
-      linux: "Alt+Space",
-    },
     description: "Open tabs window",
-  },
-  _execute_browser_action: {
+    global: true,
     suggested_key: {
-      windows: "Alt+Space",
-      mac: "Alt+Space",
-      chromeos: "Alt+Space",
-      linux: "Alt+Space",
+      default: "Ctrl+Shift+1",
+      mac: "Command+Shift+1",
     },
   },
-  _execute_page_action: {
+  _execute_action: {
     suggested_key: {
-      default: "Ctrl+Shift+E",
-      windows: "Alt+Shift+P",
-      mac: "Alt+Shift+P",
+      default: "Ctrl+Shift+Space",
+      mac: "Command+Shift+Space",
     },
   },
 }

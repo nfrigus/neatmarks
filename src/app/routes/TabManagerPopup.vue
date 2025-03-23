@@ -15,7 +15,6 @@
     getCurrentWindow,
   } from '../browser/windows'
 
-  const isPopup = window.opener !== null
   const {
     tabs,
     windows,
@@ -56,7 +55,7 @@
   }
 
   async function goToTabInBackground(tab) {
-    if (!isPopup) return
+    if (!this.isPopup) return
 
     pauseManagerClose = true
     await goToTab(tab, bgWindowId !== tab.windowId)
@@ -81,6 +80,9 @@
   }
 
   export default {
+    props: {
+      isPopup: Boolean,
+    },
     data() {
       this.loadData()
 

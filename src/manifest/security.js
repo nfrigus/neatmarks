@@ -1,16 +1,14 @@
 module.exports = {
-  content_security_policy: "script-src 'self'; object-src 'self' chrome://favicon;",
-  incognito: "spanning",
+  content_security_policy: { extension_pages: "script-src 'self'; object-src 'none';" },
   permissions: [
     "alarms",     // Backups scheduling
-    "background", // Allow background tasks: sort, sync, backup, etc
     "bookmarks",  // Access bookmarks management
-    "chrome://favicon/", // Allow favicon display for bookmarks
+    "favicon",    // https://github.com/GoogleChrome/chrome-extensions-samples/blob/main/api-samples/favicon/manifest.json#L6C20-L6C27
+    "storage",    // https://developer.chrome.com/docs/extensions/reference/api/storage
     "tabs",       // Access tabs and windows
   ],
   optional_permissions: [
     // "history",       // todo: Manage history
     // "notifications", // todo: Notifications
-    // "storage",       // todo: sync across browsers
   ],
 }

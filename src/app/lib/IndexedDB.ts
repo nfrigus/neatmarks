@@ -1,5 +1,3 @@
-import { indexedDB } from '../api/WebAPI'
-
 const operations = {
   add: { write: true },
   getAll: { write: false },

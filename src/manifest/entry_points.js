@@ -2,17 +2,14 @@ const { icons } = require('./meta')
 
 module.exports = {
   chrome_url_overrides: {},
-  browser_action: {
+  action: {
     default_icon: icons,
     default_title: "__MSG_extBtnTitle__",
     default_popup: "/app.html#/popup",
   },
   options_page: "/app.html#/options",
   background: {
-    scripts: [
-      "js/background.js",
-    ],
-    persistent: false,
+    service_worker: "js/background.js",
   },
   content_scripts: undefined && [
     {

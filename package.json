@@ -1,10 +1,10 @@
 {
   "name": "neatmarks",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "",
   "keywords": [],
   "license": "WTFPL",
-  "author": "",
+  "author": "shestakovsemen@gmail.com",
   "scripts": {
     "build": "gulp build:prod",
     "build-storybook": "storybook build",

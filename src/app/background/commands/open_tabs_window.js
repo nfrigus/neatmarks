@@ -1,19 +1,13 @@
-import { extension, windows } from '../../api/ChromeAPI'
-import window from '../../api/WebAPI'
+import { runtime, windows } from '../../api/ChromeAPI'
 
 export default function command() {
-  windows.getCurrent((win) => {
-    const popupWindow = window.open(
-      extension.getURL('app.html#/tabs'),
-      'Tab manager',
-      [
-        'alwaysOnTop=yes',
-        `height=${win.height - 10}`,
-        `left=${window.screenLeft}`,
-        `top=${window.screenTop - 70}`,
-        'width=400',
-      ].join(','),
-    )
-    popupWindow.initialWindowId = win.id
-  })
+  windows.getCurrent((win) => windows.create({
+    focused: true,
+    height: win.height - 10,
+    left: win.left,
+    top: win.top - 70,
+    type: 'popup',
+    url: runtime.getURL(`app.html#/tabs?popup=true&current=${win.id}`),
+    width: 420,
+  }))
 }

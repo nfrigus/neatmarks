@@ -11,6 +11,7 @@ extends:
   - 'plugin:vue/recommended'
 env:
   browser: true
+  webextensions: true
 rules:
   "@typescript-eslint/explicit-module-boundary-types": 0
   "@typescript-eslint/no-explicit-any": 0

@@ -36,8 +36,10 @@
                 <dt><label>Delay ordering, seconds</label></dt>
                 <dd>
                   <input
-v-model="orderDelay" html-type="number"
-                    class="form-control" name="options.orderDelay"
+                    v-model="orderDelay"
+                    class="form-control"
+                    html-type="number"
+                    name="options.orderDelay"
                   />
                 </dd>
               </template>
@@ -53,7 +55,9 @@ v-model="orderDelay" html-type="number"
 </template>
 
 <script lang="ts">
-  const { sendMessage } = (window.chrome as any).extension
+  function sendMessage(msg) {
+    return new Promise(resolve => chrome.runtime.sendMessage(msg, resolve))
+  }
 
   export default {
     data() {
@@ -67,16 +71,16 @@ v-model="orderDelay" html-type="number"
     },
     methods: {
       async load() {
-        return Object.assign(this, await new Promise(resolve => sendMessage({ request: 'options.get' }, resolve)))
+        return Object.assign(this, await sendMessage({ request: 'options.get' }))
       },
       async save() {
-        return new Promise(resolve => sendMessage({
+        return sendMessage({
           request: 'options.set',
           option: {
             orderBy: this.orderBy,
             orderDelay: this.orderDelay,
           },
-        }, resolve))
+        })
       },
       async onSubmit() {
         await this.save()

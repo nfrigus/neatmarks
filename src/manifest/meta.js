@@ -5,7 +5,7 @@ const icons = {}
 icon_sizes.forEach(size => icons[size] = `icons/${size}.png`)
 
 module.exports = {
-  manifest_version: 2,
+  manifest_version: 3,
   version: version,
   version_name: `${version} Beta (${getDate()})`,
 
@@ -15,7 +15,6 @@ module.exports = {
 
   default_locale: "en",
   icons,
-  offline_enabled: true,
 
   author: "shestakovsemen@gmail.com",
 }

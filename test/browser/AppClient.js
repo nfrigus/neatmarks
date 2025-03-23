@@ -31,7 +31,7 @@ module.exports = class AppClient {
   }
 
   async sendMessage(payload) {
-    await this.page.evaluate(data => window.chrome.extension.sendMessage(data), payload)
+    await this.page.evaluate(data => chrome.runtime.sendMessage(data), payload)
   }
 
   async reload() {

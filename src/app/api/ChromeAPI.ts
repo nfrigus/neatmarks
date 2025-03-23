@@ -6,4 +6,4 @@ export const {
   permissions,
   runtime,
   windows,
-} = window.chrome
+} = chrome

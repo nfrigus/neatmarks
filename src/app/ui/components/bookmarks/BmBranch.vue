@@ -115,7 +115,12 @@
             throw new Error(msg)
         }
       },
-      getIconSrc: node => `chrome://favicon/size/16@1x/${encodeURI(node.url)}`,
+      getIconSrc: node => {
+        const url = new URL(chrome.runtime.getURL('/_favicon/'))
+        url.searchParams.set('pageUrl', node.url)
+        url.searchParams.set('size', '16')
+        return url.toString()
+      },
       isFolder: node => getBmType(node) === 'folder',
       getTrashIcon(node) {
         return this.isRemoved(node) ? 'reply' : 'trash'
