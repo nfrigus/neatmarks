@@ -19,7 +19,7 @@
     "@storybook/addons": "^7.6.17",
     "core-js": "^3.8.0",
     "font-awesome": "^4.7.0",
-    "vue": "^3.2.37",
+    "vue": "^3.5.14",
     "vue-router": "^4.0.2"
   },
   "devDependencies": {
