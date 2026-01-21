@@ -47,7 +47,7 @@
     "gulp": "^4.0.2",
     "gulp-mocha": "^7.0.2",
     "gulp-run": "^1.7.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.23",
     "mini-css-extract-plugin": "^1.6.2",
     "mocha": "^7.1.2",
     "puppeteer": "^3.0.1",
